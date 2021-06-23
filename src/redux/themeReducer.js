@@ -1,4 +1,4 @@
-import {SWITCH_THEME, NEW_NOTIFICATION, MENU_TILES} from './actions';
+import {SWITCH_THEME, NEW_NOTIFICATION, MENU_TILES, LOGGED_IN} from './actions';
 
 export const reducer = (state = {}, action) => {
   // initialState
@@ -29,6 +29,13 @@ export const reducer = (state = {}, action) => {
         tilesPerRow: action.payload,
       };
       return newState;
+     
+    case LOGGED_IN:
+      newState = {
+        ...state,
+        loggedIn: action.loggedIn,
+      };
+      return newState;  
 
     default:
       return state;

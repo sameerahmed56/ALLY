@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity} from "react-native";
 import color from '../constants/colors';
 import DropDownPicker from 'react-native-dropdown-picker';
+import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
 export default function DropDownComponent({ dropDownWidth, placeholderTxt, textSize, upperContainerHeight, open, value, items, setOpen, setItems, setValue}) {
 
@@ -33,11 +34,11 @@ export default function DropDownComponent({ dropDownWidth, placeholderTxt, textS
             style={{ height: textSize + 10 , width: textSize + 10 , marginHorizontal: 5, tintColor: color.PRIMARY }}
             resizeMode="contain"
           />}
-            TickIconComponent={({style}) => <Image
-            source={require("../assets/selected-radio.png")}
-            style={{ height: textSize + 10 , width: textSize + 10 , marginHorizontal: 5, tintColor: color.PRIMARY }}
-            resizeMode="contain"
-          />}
+            TickIconComponent={({style}) =><Icon
+            name={'radiobox-marked'}
+            size={20}
+            color={color.PRIMARY}
+            />}
             placeholderStyle={{
               color: color.TEXT_SECONDARY,
               fontSize: textSize

@@ -5,7 +5,7 @@ import {Snackbar, Checkbox, Button, TextInput} from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
 import storageKeys from '../../constants/storageKeys';
 import {MyContext} from '../../navigation/AppNavigation';
-import {postRequest, getRequest} from '../../services/NetworkRequest';
+import {postRequest, getRequest, isNetworkConnected} from '../../services/NetworkRequest';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import GradientButton from '../../component/GradientButton';
@@ -29,34 +29,24 @@ class Login extends Component {
       open: false,
       value: null,
     };
-    this.setValue = this.setValue.bind(this);
-  }
-  setOpen(open) {
-    this.setState({
-      open
-    });
-    console.log(this.state.value)
   }
   
-  setValue(callback) {
-    this.setState(state => ({
-      value: callback(state.value)
-    }));
-  }
-
-  setGenderList(callback) {
-    this.setState(state => ({
-      items: callback(state.items)
-    }));
-  }
   login = async() =>{
     const {email, password,} = this.state
     try {
-
+      // const isNetworkConnected = await isNetworkConnected
+      // console.log('isNetworkConnected:', isNetworkConnected)
+      const loginBody = {
+        email: 'sameer.1923co1066@kiet.edu',
+        password: '12345'
+      }
+      let loginResponse = await postRequest(urls.LOGIN, JSON.stringify(loginBody));
+      console.log('loginResponse:', loginResponse)
+      const response = await JSON.parse(loginResponse)
+      console.log('response:', response)
       //login 
       // var myHeaders = new Headers();
       // myHeaders.append("Content-Type", "application/json");
-      // myHeaders.append("Cookie", "session=.eJwlzj0OwjAMQOG7ZGZwEjuOe5nK8Y9gbemEuDuV2N709H3Knkecz7K9jyseZX952YpzB5eq6J59rnAjdeqrrrszdCatRJ6dVJGItTJNQzEZU9xEaQWiSguwCJLgIQA5gMd9aSTpq00zSQaM0K4IIQZ12ByiUG7Idcbx17Ty_QFqGjCp.YNHWQA.PM5XEqswCgxtDRRI6D3_UyxBdLM");
 
       // var raw = JSON.stringify({
       //   "email": "ritika.1923cs1076@kiet.edu",
@@ -70,19 +60,18 @@ class Login extends Component {
       //   redirect: 'follow'
       // };
 
-      var myHeaders = new Headers();
-      // myHeaders.append("Cookie", "session=eyJhZG1pbiI6ZmFsc2V9.YNHZaA.NCdgQqzpIePHRBDSlxvR95G-jl0");
+      // var myHeaders = new Headers();
 
-      var requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow'
-      };
+      // var requestOptions = {
+      //   method: 'GET',
+      //   headers: myHeaders,
+      //   redirect: 'follow'
+      // };
 
-      fetch("https://c389b148d157.ngrok.io/logout", requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
+      // fetch("https://c389b148d157.ngrok.io/logout", requestOptions)
+      //   .then(response => response.text())
+      //   .then(result => console.log(result))
+      //   .catch(error => console.log('error', error));
     } catch (error) {
       console.log('error:', error)
     }
@@ -121,7 +110,7 @@ class Login extends Component {
           />
         </View>
         <View style={{marginHorizontal: 15, flexDirection: 'row', justifyContent:  'flex-end', marginTop: 10}}>
-          <TouchableOpacity onPress={() => {this.props.navigation.navigate('Forgot Password')}}>
+          <TouchableOpacity onPress={() => {this.props.navigation.navigate('Change Password')}}>
             <Text style={{fontSize: 16, color: theme.TEXT_SECONDARY}}>Forgot Password ?</Text>
           </TouchableOpacity>
         </View>

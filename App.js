@@ -20,10 +20,10 @@
  
  import AppNavigation from './src/navigation/AppNavigation';
  import color from './src/constants/colors';
+
  const App = props => (
    <NavigationContainer>
      <PaperProvider>
-       <View style={{flex: 1}}>
          <StatusBar
            translucent={true}
            barStyle="dark-content"
@@ -31,7 +31,6 @@
            backgroundColor={color.TILE}
          />
          <AppNavigation />
-       </View>
      </PaperProvider>
    </NavigationContainer>
  );
