@@ -3,13 +3,12 @@ import { View, Text, Image, TouchableHighlight, Animated, PanResponder, StatusBa
 import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome5';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import * as Animatable from 'react-native-animatable';
 import colors from '../constants/colors';
 import Home from '../screen/BottomNav/HomeScreens/Home';
-import AddHelpRequest from '../screen/BottomNav/AddHelpRequest';
 import Account from '../screen/BottomNav/Account';
 import SplashScreen, {isLoggedIn} from '../screen/Splash/SplashScreen';
 import Login from '../screen/LoginScreen/Login';
@@ -24,6 +23,10 @@ import { bindActionCreators } from 'redux'
 import { switchTheme, newNotification, loggedIn } from '../redux/actions'
 import store from '../redux/store'
 import GiveHelp from '../screen/BottomNav/HomeScreens/GiveHelp';
+import Helps from '../screen/BottomNav/RequestHelpScreens/Helps';
+import AddBasicDetails from '../screen/BottomNav/RequestHelpScreens/AddHelpRequest/AddBasicDetails';
+import AddImage from '../screen/BottomNav/RequestHelpScreens/AddHelpRequest/AddImage';
+import AddPaymentInfo from '../screen/BottomNav/RequestHelpScreens/AddHelpRequest/AddPaymentInfo';
 const SIZE = 80;
 
 export class AppNavigation extends React.Component {
@@ -70,8 +73,8 @@ export class AppNavigation extends React.Component {
       <View style={{flex: 1, paddingTop: StatusBar.currentHeight}}>
         {
           this.props.loggedIn ? 
-          // <TabNavigator />
-          <LoginStack />
+          <TabNavigator />
+          // <LoginStack />
           :
           <LoginStack />
         }
@@ -107,16 +110,28 @@ const HomeStack = (props) => (
     </StackNavigator.Navigator>
 
 )
+const HelpStack = (props) => (
+  <StackNavigator.Navigator
+      initialRouteName="Helps"
+      mode="card"
+      headerMode="none"
+  >
+      <StackNavigator.Screen name="Helps" component={Helps} />
+      <StackNavigator.Screen name="Add Basic Details" component={AddBasicDetails} />
+      <StackNavigator.Screen name="Add Image" component={AddImage} />
+      <StackNavigator.Screen name="Add Payment Info" component={AddPaymentInfo} />
+
+  </StackNavigator.Navigator>
+
+)
 const Tab = AnimatedTabBarNavigator();
 const TabNavigator = props => {
   return (
     <Tab.Navigator
       initialRouteName="Home"
       IAppearanceOptions="float"
-     
       tabBarOptions={{
         // activeTintColor: colors.WHITE,
-        keyboardHidesTabBar: true,
         activeBackgroundColor: colors.PRIMARY, //60708d
         inactiveBackgroundColor: colors.WHITE, //00223d
         activeTintColor: colors.WHITE,
@@ -126,6 +141,10 @@ const TabNavigator = props => {
         style: {
           height: 55,
         },
+      }}
+      appearance={{
+        // floating: true,
+        shadow: true
       }}
       >
       <Tab.Screen name="Home" component={HomeStack} 
@@ -139,7 +158,7 @@ const TabNavigator = props => {
             />
         )
       }}/>
-      <Tab.Screen name="Help" component={AddHelpRequest} 
+      <Tab.Screen name="Helps" component={HelpStack} 
       options={{
         tabBarIcon: ({ focused, color, size }) => (
             <FontAwesome
