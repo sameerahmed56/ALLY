@@ -10,7 +10,7 @@ export default function Header({headerText, showBackBtn}) {
     const navigation = useNavigation()
     const theme = colors
     return (
-        <View style={{flexDirection: 'row', backgroundColor: theme.WHITE, paddingHorizontal: 15, alignItems: 'center', paddingVertical: 8, marginBottom: 10}}>
+        <View style={{flexDirection: 'row', backgroundColor: theme.WHITE, paddingHorizontal: 15, alignItems: 'center', justifyContent: showBackBtn ? 'flex-start' : 'center', paddingVertical: 8, marginBottom: 5}}>
             {
                 showBackBtn && 
                 <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -21,8 +21,8 @@ export default function Header({headerText, showBackBtn}) {
                     />
                 </TouchableOpacity>
             }
-            <View style={{marginLeft: showBackBtn ? 10 : 5}}>
-                <Text style={{fontSize: showBackBtn ? 22 : 25, fontWeight: 'bold', color: theme.TEXT_PRIMARY}}>{headerText}</Text>
+            <View style={{marginLeft: showBackBtn ? 10 : 0,}}>
+                <Text style={{fontSize: showBackBtn ? 20 : 24, fontWeight: 'bold', color: theme.TEXT_PRIMARY, letterSpacing: 1}}>{headerText}</Text>
             </View>
         </View>
     )

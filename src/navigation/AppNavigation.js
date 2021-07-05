@@ -9,7 +9,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import * as Animatable from 'react-native-animatable';
 import colors from '../constants/colors';
 import Home from '../screen/BottomNav/HomeScreens/Home';
-import Account from '../screen/BottomNav/Account';
+import Account from '../screen/BottomNav/Account/Account';
 import SplashScreen, {isLoggedIn} from '../screen/Splash/SplashScreen';
 import Login from '../screen/LoginScreen/Login';
 import Signup from '../screen/LoginScreen/Signup';
@@ -19,17 +19,19 @@ import { color } from 'react-native-reanimated';
 import ForgotPassword from '../screen/LoginScreen/ForgotPassword';
 import ChangePassword from '../screen/LoginScreen/ChangePassword';
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { switchTheme, newNotification, loggedIn } from '../redux/actions'
+// import { bindActionCreators } from 'redux'
+// import { switchTheme, newNotification, loggedIn } from '../redux/actions'
 import store from '../redux/store'
 import GiveHelp from '../screen/BottomNav/HomeScreens/GiveHelp';
 import Helps from '../screen/BottomNav/RequestHelpScreens/Helps';
 import AddBasicDetails from '../screen/BottomNav/RequestHelpScreens/AddHelpRequest/AddBasicDetails';
 import AddImage from '../screen/BottomNav/RequestHelpScreens/AddHelpRequest/AddImage';
 import AddPaymentInfo from '../screen/BottomNav/RequestHelpScreens/AddHelpRequest/AddPaymentInfo';
+import NotificationScreen from '../screen/BottomNav/Account/NotificationScreen';
+import ShowNotification from '../screen/BottomNav/Account/ShowNotification';
 const SIZE = 80;
 
-export class AppNavigation extends React.Component {
+export default class AppNavigation extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +41,7 @@ export class AppNavigation extends React.Component {
   }
 
   componentDidMount() {
-    store.dispatch(loggedIn(false))
+    // store.dispatch(loggedIn(false))
   }
 
   logout = async () => {
@@ -76,7 +78,8 @@ export class AppNavigation extends React.Component {
           <TabNavigator />
           // <LoginStack />
           :
-          <LoginStack />
+          <TabNavigator />
+          // <LoginStack />
         }
         
       </View>
@@ -120,6 +123,19 @@ const HelpStack = (props) => (
       <StackNavigator.Screen name="Add Basic Details" component={AddBasicDetails} />
       <StackNavigator.Screen name="Add Image" component={AddImage} />
       <StackNavigator.Screen name="Add Payment Info" component={AddPaymentInfo} />
+
+  </StackNavigator.Navigator>
+
+)
+const AccountStack = (props) => (
+  <StackNavigator.Navigator
+      initialRouteName="Account"
+      mode="card"
+      headerMode="none"
+  >
+      <StackNavigator.Screen name="Helps" component={Account} />
+      <StackNavigator.Screen name="Notification Screen" component={NotificationScreen} />
+      <StackNavigator.Screen name="Show Notification" component={ShowNotification} />
 
   </StackNavigator.Navigator>
 
@@ -170,7 +186,7 @@ const TabNavigator = props => {
         )
       }}
       />
-      <Tab.Screen name="Account" component={Account} 
+      <Tab.Screen name="Account" component={AccountStack} 
       options={{
         tabBarIcon: ({ focused, color, size }) => (
             <Icon
@@ -191,23 +207,19 @@ export const MyContext = React.createContext(
       //do nothing 
   }
 )
-const mapStateToProps = state => ({
-  theme: state.reducer.theme,
-  notification: state.reducer.newNotification,
-  loggedIn: state.reducer.loggedIn
-})
+// const mapStateToProps = state => ({
+//   theme: state.reducer.theme,
+//   notification: state.reducer.newNotification,
+//   loggedIn: state.reducer.loggedIn
+// })
 
-const mapDispatchToProps = dispatch => ({
-  switchTheme: bindActionCreators(switchTheme, dispatch),
-  newNotification: bindActionCreators(newNotification, dispatch),
-  loggedIn: bindActionCreators(loggedIn, dispatch)
+// const mapDispatchToProps = dispatch => ({
+//   switchTheme: bindActionCreators(switchTheme, dispatch),
+//   newNotification: bindActionCreators(newNotification, dispatch),
+//   loggedIn: bindActionCreators(loggedIn, dispatch)
 
-})
+// })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AppNavigation)
 //function to generate view for bottom nav bar icon with badge
 function IconWithBadge({name, badgeCount, color, size}) {
   return (

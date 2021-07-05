@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "777107883650",
+    "project_id": "ally-a487a",
+    "storage_bucket": "ally-a487a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777107883650:android:9ca8d9070c1595efd0969b",
+        "android_client_info": {
+          "package_name": "com.ally"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "777107883650-4i7b22f878vna0hssm41usg5460d72e4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUe4EJl1hgvDZsrCy5Ko6FvSP2Qmb_s8Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "777107883650-4i7b22f878vna0hssm41usg5460d72e4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

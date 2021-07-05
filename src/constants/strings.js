@@ -18,7 +18,7 @@ export default {
     
     ALLOWED_UPLOAD_FORMATS : ['application/pdg','image/png','image/jpg','image/jpeg'],
 
-    APPLICATION : 'MOBIKIET',
+    APPLICATION : 'ALLY',
 
     DEFAULT_TILES : 2,
 

@@ -2,7 +2,6 @@ import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification from 'react-native-push-notification';
 import React, { useEffect } from 'react'
 import messaging from '@react-native-firebase/messaging';
-import { Alert } from "react-native";
 import storageKeys from "../constants/storageKeys";
 import AsyncStorage from '@react-native-community/async-storage';
 import store from '../redux/store'
@@ -35,9 +34,24 @@ export const getToken = async() => {
 
 export const foregroundMessage = async(remoteMessage) => {
     let notificationData = saveNotification(remoteMessage)
-    let state = store.getState().reducer.newNotification.count
-    let obj = {count:state+1,data:notificationData}
-    await store.dispatch(newNotification(obj))
+    let state = await store.getState().reducer.newNotification
+    console.log(state,"state")
+    if(!state.count){
+        console.log("if reached")
+        let obj = {count:1,data:notificationData}
+        await store.dispatch(newNotification(obj))
+        notificationres=await store.getState().reducer.newNotification
+        console.log(notificationres)
+    }else{
+        const res=state.count
+        console.log("else reached")
+        let obj = {count:res+1,data:notificationData}
+        await store.dispatch(newNotification(obj))
+    }
+    // if(state=={}){
+    // }else{
+    // }
+    
 }
 
 export const backgroundMessage = (remoteMessage) => {
@@ -54,17 +68,18 @@ const saveNotification = async(remoteMessage) => {
         await AsyncStorage.setItem(storageKeys.NEW_NOTIFICATION,JSON.stringify(1))
     }
     let formData = JSON.parse(remoteMessage.data.data)
-    // console.log(JSON.parse(data.data).title)    //form
+    //console.log(formData)
+   // console.log(JSON.parse(remoteMessage.data.data).title)    //form
     // console.log(data)   //POSTMAN
 
     let date = new Date(); 
-    let timestamp = await date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear() // +'/'+date.getDay()
+    let timestamp = await date.getDate()+'/'+date.getMonth()+1+'/'+date.getFullYear() // +'/'+date.getDay()
     let data = {
         body:formData.message,
         title:formData.title,
         goToLink:formData.goToLink,
         imageUrl:formData.imageUrl,
-        timeStamp:timestamp
+        timeStamp:timestamp,
     }
     
     let previousData = await AsyncStorage.getItem(storageKeys.NOTIFICATION_DATA)

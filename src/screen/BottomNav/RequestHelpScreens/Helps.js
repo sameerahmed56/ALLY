@@ -21,7 +21,7 @@ class Helps extends PureComponent {
     const theme = color
     return (
       <View style={{flex: 1}}>
-        <Header headerText="Helps" showBackBtn={true}/>
+        <Header headerText="Help" showBackBtn={false}/>
         <FloatingAction
             color={theme.PRIMARY}
             actions={actions}
