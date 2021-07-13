@@ -17,13 +17,35 @@ class VerifyOtp extends Component {
 
     this.state = {
       snackbarVisibility: false,
-      email: '',
+      email: 'sameer.1923co1066@kiet.edu',
       snackbarMsg: '',
       otpStatus: '0',
       otpValue: ''
     };
   }
-  componentDidMount() {}
+
+  async componentDidMount() {
+    const response = await getRequest(urls.LOGOUT)
+    console.log('response:', response)
+    // this.setData()
+  }
+  setData = async() => {
+    const {email} = this.state
+    if(isNetworkConnected){
+      try {
+        const mailBody = JSON.stringify({
+          email: email,
+        })
+        let response =  await postRequest(urls.MAIL_SENT, mailBody)
+        console.log('response:', response)
+      } catch (error) {
+        console.log('error:', error)
+      }
+    }
+    else{
+      console.log("no internet")
+    }
+  }
   verify = async() =>{
     const {email, otpValue} = this.state
     console.log('otpValue:', otpValue)
@@ -36,8 +58,14 @@ class VerifyOtp extends Component {
           })
           let response =  await postRequest(urls.VERIFY_OTP, otpBody)
           console.log('response:', response)
+          if(response.msg == 'verified'){
+            this.props.navigation.navigate('Login')
+          }
+          else{
+            console.log('not verified')
+          }
         } catch (error) {
-          console.log('error:', error)
+          console.log('error:', error)  
         }
       }
       else{

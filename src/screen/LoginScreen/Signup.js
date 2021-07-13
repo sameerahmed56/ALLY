@@ -17,17 +17,17 @@ class Signup extends Component {
     super(props);
 
     this.state = {
-      email: '',
-      fullName: '',
+      email: 'sameer.1923co1066@kiet.edu',
+      fullName: 'Sameer Ahmed',
       showPassword: false,
-      password: '',
+      password: '123456',
       genderList: [
         {label: 'Male', value: 'male'},
         {label: 'Female', value: 'female'},
         {label: 'Other', value: 'other'}
       ],
       open: false,
-      value: null,
+      value: '',
     };
     this.setValue = this.setValue.bind(this);
   }
@@ -62,6 +62,12 @@ class Signup extends Component {
           })
           let response =  await postRequest(urls.REGISTER, signUpBody)
           console.log('response:', response)
+          if(response.verified === false){
+            this.props.navigation.navigate('Verify Otp')
+          }
+          else if(response.exist === 1 && response.verified == true){
+            console.log('redirect to login')
+          }
         } catch (error) {
           console.log('error:', error)
         }
@@ -132,8 +138,7 @@ class Signup extends Component {
           />
         </View>
         <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center', marginTop: 40, }} onPress={() =>{
-          // this.signUp()
-          this.props.navigation.navigate('Verify Otp')
+          this.signUp()
         }}>
           <GradientButton 
           colorArray={[theme.PRIMARY_LIGHT, theme.PRIMARY_DARK]}

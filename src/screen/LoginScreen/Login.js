@@ -7,6 +7,8 @@ import storageKeys from '../../constants/storageKeys';
 import {MyContext} from '../../navigation/AppNavigation';
 import {postRequest, getRequest, isNetworkConnected} from '../../services/NetworkRequest';
 import Entypo from 'react-native-vector-icons/Entypo';
+import {getToken,requestPermission,checkPermission, sendNotification} from '../../services/pushNotification'
+import DeviceInfo from 'react-native-simple-device-info';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import GradientButton from '../../component/GradientButton';
 import DropDownComponent from '../../component/DropDownComponent';
@@ -17,15 +19,51 @@ class Login extends Component {
     super(props);
 
     this.state = {
-      email: '',
+      email: 'sameer.1923co1066@kiet.edu',
       showPassword: false,
-      password: '',
+      password: '123456',
     };
   }
-  
+  async componentDidMount() {
+    // const response = await getRequest(urls.LOGOUT)
+    // console.log('response:', response)
+    // this.setData()
+  }
+  setNotification = async() =>{
+    const {email, password} = this.state
+    const NotificationPermission = await checkPermission()
+    if (!NotificationPermission){
+      const requestPerm = await requestPermission()
+      if(!requestPerm){
+          this.setState({snackbarVisibility:true,snackbarMsg:"You Wont Receive Any Notification"})
+          return
+      }
+    }
+    const token = await getToken()
+    console.log('token:', token)
+    // check generated token here
+    if(token){
+      const device_id = await DeviceInfo.getUniqueID()
+      const fcmInsertBody = JSON.stringify({
+        fcm_token:token,
+        device_id:device_id,
+        email: email
+      })
+      try{
+
+          let response = await postRequest(urls.FCM_INSERT,fcmInsertBody)
+          console.log('response:', response)
+
+      }catch(e){
+          console.log('e:', e)
+          //failed to set fcm
+      }
+    }
+    
+  }
+
   login = async() =>{
     const {email, password} = this.state
-    console.log('DDD')
     if(isNetworkConnected){
       if(email.trim() !== '' && password.trim() !== ''){
         try {
@@ -35,6 +73,7 @@ class Login extends Component {
           })
           let response =  await postRequest(urls.LOGIN, loginBody)
           console.log('response:', response)
+          this.setNotification()
         } catch (error) {
           console.log('error:', error)
         }
@@ -76,6 +115,7 @@ class Login extends Component {
           mode='flat'
           theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
           label='Password'
+          secureTextEntry={!this.state.showPassword}
           onChangeText={(password) => this.setState({ password: password })}
           placeholder='Enter your password'
           />
@@ -85,7 +125,10 @@ class Login extends Component {
             <Text style={{fontSize: 16, color: theme.TEXT_SECONDARY}}>Forgot Password ?</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center', marginTop: 60}} onPress={() => {this.props.navigation.navigate('Verify Otp')}}>
+        <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center', marginTop: 60}} onPress={() => {
+          this.login()
+          // this.props.navigation.navigate('Signup')
+        }}>
           <GradientButton 
           colorArray={[theme.PRIMARY_LIGHT, theme.PRIMARY_DARK]}
           paddingHorizontal={25}

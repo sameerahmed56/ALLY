@@ -78,8 +78,8 @@ export default class AppNavigation extends React.Component {
           <TabNavigator />
           // <LoginStack />
           :
-          <TabNavigator />
-          // <LoginStack />
+          // <TabNavigator />
+          <LoginStack />
         }
         
       </View>
@@ -92,7 +92,7 @@ const StackNavigator = createStackNavigator();
 
 const LoginStack = props => (
   <StackNavigator.Navigator
-    initialRouteName="Signup"
+    initialRouteName="Login"
     mode="modal"
     headerMode="none">
     <StackNavigator.Screen name="Login" component={Login} />

@@ -10,7 +10,8 @@ import * as Animatable from "react-native-animatable";
 import  colors from '../../../constants/colors';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons'
 import Header from '../../../component/Header'
-
+import urls from '../../../constants/urls'
+import {isNetworkConnected, postRequest, getRequest} from '../../../services/NetworkRequest'
 
 class Account extends PureComponent {
   constructor(props) {
@@ -18,7 +19,26 @@ class Account extends PureComponent {
 
     this.state = {};
   }
-
+  componentDidMount(){
+    // this.setData()
+  }
+  setData = async() =>{
+    try {
+      if(isNetworkConnected){
+        try {
+          let response =  await getRequest(urls.PROFILE)
+          console.log('response:', response)
+        } catch (error) {
+          console.log('error:', error)
+        }
+      }
+      else{
+        console.log("no internet")
+      }
+    } catch (error) {
+      
+    }
+  }
   render() {
     const theme = colors
     const badgeCount =store.getState().reducer.newNotification
@@ -27,12 +47,13 @@ class Account extends PureComponent {
     return (
       <View style={{flex: 1}}>
         <Header headerText="Account" showBackBtn={false}/>
-         <TouchableOpacity onPress={() => { this.props.navigation.navigate("Notification Screen") }} activeOpacity={0.8}>
-              <View style={{ backgroundColor: colors.BACKGROUND, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', paddingLeft: 10, paddingVertical: 15, borderRadius: 3, elevation: 2 }}>
-                  <IconWithBadge name="bell" size={27} color={colors.THEME_ORANGE} badgeCount={badgeCount.count} />
-                  <Text style={{ color: colors.TEXT_PRIMARY, fontSize: 16, paddingLeft: 15 }}>Notification</Text>
-              </View>
-          </TouchableOpacity>
+        <View></View>
+        <TouchableOpacity onPress={() => { this.props.navigation.navigate("Notification Screen") }} activeOpacity={0.8}>
+            <View style={{ backgroundColor: colors.BACKGROUND, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', paddingLeft: 10, paddingVertical: 15, borderRadius: 3, elevation: 2 }}>
+                <IconWithBadge name="bell" size={27} color={colors.THEME_ORANGE} badgeCount={badgeCount.count} />
+                <Text style={{ color: colors.TEXT_PRIMARY, fontSize: 16, paddingLeft: 15 }}>Notification</Text>
+            </View>
+        </TouchableOpacity>
       </View>
     )
   }
