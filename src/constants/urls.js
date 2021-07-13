@@ -11,4 +11,5 @@ export default {
     MAIL_SENT: BASE_URL + 'mail',
     VERIFY_OTP: BASE_URL + 'verify',
     PROFILE: BASE_URL + 'profile',
+    IFSC_VERIFY: "https://ifsc.razorpay.com/",
 }

@@ -33,8 +33,8 @@ class AddBasicDetails extends Component {
         const theme = colors
         return (
             <View style={{flex: 1, backgroundColor: theme.BACKGROUND, }}>
-                <Text>Add Basic Details.</Text>
-                <View style={{marginHorizontal: 15}}>
+                <Header headerText="Add Reason" showBackBtn={true} />
+                <View style={{marginHorizontal: 20}}>
                     <View style={styles.textInputContainer}>
                         <TextInput
                         style={styles.textInputStyle}
@@ -80,9 +80,9 @@ const styles = StyleSheet.create({
     fontSize: 15 
   },
   textInputContainer: {
-    borderWidth: 1, 
-    borderColor: colors.BORDER, 
-    elevation: 5, 
-    marginVertical: 10
+    // borderWidth: 1, 
+    // borderColor: colors/.BORDER, 
+    // elevation: 5, 
+    marginVertical: 10,
   },
 });

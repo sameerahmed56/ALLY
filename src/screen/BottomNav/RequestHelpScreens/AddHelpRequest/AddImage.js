@@ -191,6 +191,7 @@ export default class AddImage extends Component {
         const { selectedImageUri, base64Image, imageHeight, imageWidth, fileName, fileType } = this.state
         return (
             <View style={{flex: 1, backgroundColor:  theme.BACKGROUND}}>
+                <Header headerText="Add Image" showBackBtn={true} />
                 <ScrollView>
                     <Text>{base64Image == '' ? 'Not any selected Image' : 'Your selected Image'}</Text>
                     {
@@ -209,7 +210,7 @@ export default class AddImage extends Component {
                     </TouchableOpacity>
                 </View>
                 <View style={{ backgroundColor: theme.PRIMARY, position: 'absolute', bottom: 30, right: 30, borderRadius: 28, height: 56, width: 56, elevation: 8, justifyContent: 'center', alignItems: 'center' }}  >
-                    <TouchableOpacity style={{ paddingHorizontal: 10 }} onPress={() => { this.uploadImage(selectedImageUri, fileName, fileType)}}>
+                    <TouchableOpacity style={{ paddingHorizontal: 10 }} onPress={() => { this.props.navigation.navigate('Add Payment Info')}}>
                         <Icon name="send" color={theme.TEXT_WHITE} size={25} />
                     </TouchableOpacity>
                 </View>

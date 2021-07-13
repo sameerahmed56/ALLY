@@ -79,10 +79,5 @@ const DeviceWidth = Dimensions.get('window').width;
 const DeviceHeight = Dimensions.get('window').height;
 
 export const isLoggedIn = async () => {
-  // let cookie = await AsyncStorage.getItem(storageKeys.COOKIE);
-  // if (cookie) {
-  // return true;
-  // } else {
   return true;
-  // }
 };

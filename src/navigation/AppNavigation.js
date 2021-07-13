@@ -78,8 +78,8 @@ export default class AppNavigation extends React.Component {
           <TabNavigator />
           // <LoginStack />
           :
-          // <TabNavigator />
-          <LoginStack />
+          <TabNavigator />
+          // <LoginStack />
         }
         
       </View>

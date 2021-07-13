@@ -22,7 +22,7 @@ export default function Header({headerText, showBackBtn}) {
                 </TouchableOpacity>
             }
             <View style={{marginLeft: showBackBtn ? 10 : 0,}}>
-                <Text style={{fontSize: showBackBtn ? 20 : 24, fontWeight: 'bold', color: theme.TEXT_PRIMARY, letterSpacing: 1}}>{headerText}</Text>
+                <Text style={{fontSize: showBackBtn ? 20 : 22, fontWeight: 'bold', color: theme.TEXT_PRIMARY, letterSpacing: 1}}>{headerText}</Text>
             </View>
         </View>
     )
