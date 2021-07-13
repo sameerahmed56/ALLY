@@ -202,8 +202,8 @@ export default class AddImage extends Component {
                 </ScrollView>
                 <View style={{position: 'absolute', left: 30, bottom: 30, elevation: 5, backgroundColor: theme.WHITE, height: 56, width: 56, justifyContent: 'center', alignItems: 'center', borderRadius: 30}}>
                     <TouchableOpacity 
-                    // onPress={() => { this.addImage() }}
-                    onPress={() => { this.pickDocument() }}
+                    onPress={() => { this.addImage() }}
+                    // onPress={() => { this.pickDocument() }}
                     > 
                         <Icon name="camera" size={30} color={theme.PRIMARY} />
                     </TouchableOpacity>

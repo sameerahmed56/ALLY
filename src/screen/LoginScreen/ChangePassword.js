@@ -1,15 +1,16 @@
 import React, {Component} from 'react';
 import { View, Text, Dimensions, ScrollView, StyleSheet, TouchableOpacity, Animation, Image } from 'react-native';
 import colors from '../../constants/colors';
+import {getRequest, postRequest, isNetworkConnected} from '../../services/NetworkRequest'
 import {Snackbar, Checkbox, Button, TextInput} from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
 import storageKeys from '../../constants/storageKeys';
 import {MyContext} from '../../navigation/AppNavigation';
-import {postRequest, getRequest} from '../../services/APIRequest';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import GradientButton from '../../component/GradientButton';
 import DropDownComponent from '../../component/DropDownComponent';
+import urls from '../../constants/urls'
 
 class ChangePassword extends Component {
   constructor(props) {
@@ -17,19 +18,41 @@ class ChangePassword extends Component {
 
     this.state = {
       email: '',
-      fullName: '',
       currentPassword: '',
       newPassword: '',
       confirmNewPassword: '',
       showPassword: false,
-      genderList: [
-        {label: 'Male', value: 'male'},
-        {label: 'Female', value: 'female'},
-        {label: 'Other', value: 'other'}
-      ],
-      open: false,
-      value: null,
     };
+  }
+  changePassword = async() =>{
+    const {email, currentPassword, newPassword} = this.state
+    console.log('DDD')
+    if(isNetworkConnected){
+      if(currentPassword.trim() !== ''){
+        if(newPassword === confirmNewPassword){
+          try {
+            const changePasswordBody = JSON.stringify({
+              email: email,
+              current_pass: currentPassword,
+              new_pass:  newPassword
+            })
+            let response =  await postRequest(urls.PASSWORD_CHANGE, changePasswordBody)
+            console.log('response:', response)
+          } catch (error) {
+            console.log('error:', error)
+          }
+        }
+        else{
+          console.log('password do not match')
+        }
+      }
+      else{
+        console.log('fill all form')
+      }
+    }
+    else{
+      console.log("no internet")
+    }
   }
 
   render() {
@@ -83,7 +106,7 @@ class ChangePassword extends Component {
           paddingVertical={10}
           btnWidth={DeviceWidth / 1.2}
           borderRadius={5}
-          MiddleComponent={() =><Text style={{color: theme.TEXT_WHITE, fontSize: 18}}>Send Recovery Mail</Text>}
+          MiddleComponent={() =><Text style={{color: theme.TEXT_WHITE, fontSize: 18}}>Change Password</Text>}
           />
         </TouchableOpacity>
       </View>

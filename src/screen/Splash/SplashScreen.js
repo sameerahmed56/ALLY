@@ -83,6 +83,6 @@ export const isLoggedIn = async () => {
   // if (cookie) {
   // return true;
   // } else {
-  return false;
+  return true;
   // }
 };

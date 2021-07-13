@@ -8,10 +8,10 @@ import NetInfo from "@react-native-community/netinfo";
 
 export async function getRequest(url = "") {
 
-    let myHeaders = new Headers();
+    // let myHeaders = new Headers();
     let response = await fetch(url, {
         method: 'GET',
-        headers: myHeaders
+        // headers: myHeaders
     });
     let responseJson = await response.json();
     return responseJson;
@@ -20,13 +20,14 @@ export async function getRequest(url = "") {
 
 export async function postRequest(url = "", body = {}) {
     let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
     let response = await fetch(url, {
         method: 'POST',
         headers: myHeaders,
         body: body
     });
     let responseJson = await response.json();
-    return response;
+    return responseJson;
 }
 
 export function isNetworkConnected(){

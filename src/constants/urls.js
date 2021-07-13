@@ -8,5 +8,7 @@ export default {
     LOGIN: BASE_URL + "login",
     PASSWORD_CHANGE: BASE_URL + 'passwordchange',
     LOGOUT: BASE_URL + 'logout',
+    MAIL_SENT: BASE_URL + 'mail',
+    VERIFY_OTP: BASE_URL + 'verify',
     PROFILE: BASE_URL + 'profile',
 }

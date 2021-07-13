@@ -18,62 +18,33 @@ class Login extends Component {
 
     this.state = {
       email: '',
-      fullName: '',
       showPassword: false,
       password: '',
-      genderList: [
-        {label: 'Male', value: 'male'},
-        {label: 'Female', value: 'female'},
-        {label: 'Other', value: 'other'}
-      ],
-      open: false,
-      value: null,
     };
   }
   
   login = async() =>{
-    const {email, password,} = this.state
-    try {
-      // const isNetworkConnected = await isNetworkConnected
-      // console.log('isNetworkConnected:', isNetworkConnected)
-      const loginBody = {
-        email: 'sameer.1923co1066@kiet.edu',
-        password: '12345'
+    const {email, password} = this.state
+    console.log('DDD')
+    if(isNetworkConnected){
+      if(email.trim() !== '' && password.trim() !== ''){
+        try {
+          const loginBody = JSON.stringify({
+            email: email,
+            password: password
+          })
+          let response =  await postRequest(urls.LOGIN, loginBody)
+          console.log('response:', response)
+        } catch (error) {
+          console.log('error:', error)
+        }
       }
-      let loginResponse = await postRequest(urls.LOGIN, JSON.stringify(loginBody));
-      console.log('loginResponse:', loginResponse)
-      const response = await JSON.parse(loginResponse)
-      console.log('response:', response)
-      //login 
-      // var myHeaders = new Headers();
-      // myHeaders.append("Content-Type", "application/json");
-
-      // var raw = JSON.stringify({
-      //   "email": "ritika.1923cs1076@kiet.edu",
-      //   "password": "12345"
-      // });
-
-      // var requestOptions = {
-      //   method: 'POST',
-      //   headers: myHeaders,
-      //   body: raw,
-      //   redirect: 'follow'
-      // };
-
-      // var myHeaders = new Headers();
-
-      // var requestOptions = {
-      //   method: 'GET',
-      //   headers: myHeaders,
-      //   redirect: 'follow'
-      // };
-
-      // fetch("https://c389b148d157.ngrok.io/logout", requestOptions)
-      //   .then(response => response.text())
-      //   .then(result => console.log(result))
-      //   .catch(error => console.log('error', error));
-    } catch (error) {
-      console.log('error:', error)
+      else{
+        console.log('fill all form')
+      }
+    }
+    else{
+      console.log("no internet")
     }
   }
   render() {
@@ -114,7 +85,7 @@ class Login extends Component {
             <Text style={{fontSize: 16, color: theme.TEXT_SECONDARY}}>Forgot Password ?</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center', marginTop: 60}} onPress={() => {this.login()}}>
+        <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center', marginTop: 60}} onPress={() => {this.props.navigation.navigate('Verify Otp')}}>
           <GradientButton 
           colorArray={[theme.PRIMARY_LIGHT, theme.PRIMARY_DARK]}
           paddingHorizontal={25}

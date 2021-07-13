@@ -9,7 +9,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import GradientButton from '../../component/GradientButton';
 import DropDownComponent from '../../component/DropDownComponent';
-import {getRequest, postRequest} from '../../services/NetworkRequest'
+import {getRequest, postRequest, isNetworkConnected} from '../../services/NetworkRequest'
 import urls from '../../constants/urls'
 
 class Signup extends Component {
@@ -49,42 +49,29 @@ class Signup extends Component {
     }));
   }
   signUp = async() =>{
-    // const {email, password, value, fullName} = this.state
+    const {email, password, value, fullName} = this.state
     console.log('DDD')
-    try {
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
-      // myHeaders.append("Cookie", "session=.eJwlzjEOwyAMQNG7MHfABmOcy0SAbTVS24E0U9W7F6njX57-J-w-7byH7T0vu4X90LAFLSzQ1DAjwyAkHUmHKivVIa14ib1HLUKFDaNrlAKOVgVUkFE4jRozM7Vo3MCGiHUylyrL8A7CpMvIRM0zC4N05EqJIpeawhq5Tpv_G1jZ9Hm8wubtcdr3B2ekM0s.YNHTBA.SDtKrTWZ0Ap8cjC6FgDp59YOe2Q");
-          
-      var raw = JSON.stringify({
-        "email": "ritika.1923cs1076@kiet.edu",
-        "gender": "female",
-        "name": "Ritika Signh",
-        "password": "12345"
-      });
-      
-      var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-      };
-
-      fetch("https://c389b148d157.ngrok.io/index", requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
-      // const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json' }
-      // const signUpBody= {
-      //   name: fullName,
-      //   gender: value,
-      //   password: password,
-      //   email: email
-      // }
-      // let signUpResponse = await postRequest(urls.REGISTER, { Cookie: '' }, JSON.stringify(signUpBody), headers)
-      // console.log('signUpResponse:', signUpResponse)
-    } catch (error) {
-      console.log('error:', error)
+    if(isNetworkConnected){
+      if(email.trim() !== '' && password.trim() !== '' && fullName.trim() !== '' && value.trim() !== '' ){
+        try {
+          const signUpBody = JSON.stringify({
+            email: email,
+            gender: value,
+            name: fullName,
+            password: password
+          })
+          let response =  await postRequest(urls.REGISTER, signUpBody)
+          console.log('response:', response)
+        } catch (error) {
+          console.log('error:', error)
+        }
+      }
+      else{
+        console.log('fill all form')
+      }
+    }
+    else{
+      console.log("no internet")
     }
   }
   render() {
@@ -145,7 +132,8 @@ class Signup extends Component {
           />
         </View>
         <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center', marginTop: 40, }} onPress={() =>{
-          this.signUp()
+          // this.signUp()
+          this.props.navigation.navigate('Verify Otp')
         }}>
           <GradientButton 
           colorArray={[theme.PRIMARY_LIGHT, theme.PRIMARY_DARK]}
