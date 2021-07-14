@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
@@ -9,7 +9,7 @@ import {
   StyleSheet,
   MaskedViewIOS,
 } from 'react-native';
-import {Button, Snackbar} from 'react-native-paper';
+import { Button, Snackbar } from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
 import storageKeys from '../../constants/storageKeys';
 import color from '../../constants/colors';
@@ -58,7 +58,7 @@ export default class SplashScreen extends React.Component {
           padding: 1,
         }}>
         <Image
-          style={{tintColor: color.WHITE,  height: 200, width: 200}}
+          style={{ tintColor: color.WHITE, height: 200, width: 200 }}
           resizeMode="contain"
           source={require('../../assets/ally-logo.png')}
         />
@@ -79,5 +79,17 @@ const DeviceWidth = Dimensions.get('window').width;
 const DeviceHeight = Dimensions.get('window').height;
 
 export const isLoggedIn = async () => {
-  return true;
-};
+  try {
+    let cookie = await AsyncStorage.getItem(storageKeys.COOKIES)
+    if (cookie == null) {
+      // return "LoggedIn"
+      return true
+    } else {
+      return false
+    }
+  }
+  catch (err) {
+    // 
+  }
+}
+
