@@ -31,6 +31,7 @@ import NotificationScreen from '../screen/BottomNav/Account/NotificationScreen';
 import ShowNotification from '../screen/BottomNav/Account/ShowNotification';
 import SubmitRequest from '../screen/BottomNav/RequestHelpScreens/AddHelpRequest/SubmitRequest';
 import Admin from '../screen/BottomNav/Account/Admin';
+import EditProfile from '../screen/BottomNav/Account/EditProfie';
 const SIZE = 80;
 
 export default class AppNavigation extends React.Component {
@@ -141,6 +142,7 @@ const AccountStack = (props) => (
   >
     <StackNavigator.Screen name="Helps" component={Account} />
     <StackNavigator.Screen name="Admin" component={Admin} />
+    <StackNavigator.Screen name="Edit Profile" component={EditProfile} />
     <StackNavigator.Screen name="Notification Screen" component={NotificationScreen} />
     <StackNavigator.Screen name="Show Notification" component={ShowNotification} />
 

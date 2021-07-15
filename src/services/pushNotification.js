@@ -5,9 +5,9 @@ import messaging from '@react-native-firebase/messaging';
 import storageKeys from "../constants/storageKeys";
 import AsyncStorage from '@react-native-community/async-storage';
 import store from '../redux/store'
-import {newNotification} from '../redux/actions'
+import { newNotification } from '../redux/actions'
 
-export const checkPermission = async() => {
+export const checkPermission = async () => {
     const enabled = await messaging().hasPermission();
     if (enabled) {
         return true
@@ -16,7 +16,7 @@ export const checkPermission = async() => {
     }
 }
 
-export const requestPermission = async() => {
+export const requestPermission = async () => {
     try {
         await messaging().requestPermission();
         // User has authorised
@@ -27,90 +27,93 @@ export const requestPermission = async() => {
     }
 }
 
-export const getToken = async() => {
+export const getToken = async () => {
     fcmToken = await messaging().getToken();
     return fcmToken
 }
 
-export const foregroundMessage = async(remoteMessage) => {
+export const foregroundMessage = async (remoteMessage) => {
+    console.log('remoteMessage3:', remoteMessage)
     let notificationData = saveNotification(remoteMessage)
     let state = await store.getState().reducer.newNotification
-    console.log(state,"state")
-    if(!state.count){
+    console.log(state, "state")
+    if (!state.count) {
         console.log("if reached")
-        let obj = {count:1,data:notificationData}
+        let obj = { count: 1, data: notificationData }
         await store.dispatch(newNotification(obj))
-        notificationres=await store.getState().reducer.newNotification
+        notificationres = await store.getState().reducer.newNotification
         console.log(notificationres)
-    }else{
-        const res=state.count
+    } else {
+        const res = state.count
         console.log("else reached")
-        let obj = {count:res+1,data:notificationData}
+        let obj = { count: res + 1, data: notificationData }
         await store.dispatch(newNotification(obj))
     }
     // if(state=={}){
     // }else{
     // }
-    
+
 }
 
 export const backgroundMessage = (remoteMessage) => {
+    console.log('remoteMessage4:', remoteMessage)
     saveNotification(remoteMessage)
 
 }
- 
-const saveNotification = async(remoteMessage) => {
+
+const saveNotification = async (remoteMessage) => {
     let oldNotification = await AsyncStorage.getItem(storageKeys.NEW_NOTIFICATION)
     oldNotification = await JSON.parse(oldNotification)
-    if(oldNotification){
-        await AsyncStorage.setItem(storageKeys.NEW_NOTIFICATION,JSON.stringify(oldNotification+1))
-    }else{
-        await AsyncStorage.setItem(storageKeys.NEW_NOTIFICATION,JSON.stringify(1))
+    if (oldNotification) {
+        await AsyncStorage.setItem(storageKeys.NEW_NOTIFICATION, JSON.stringify(oldNotification + 1))
+    } else {
+        await AsyncStorage.setItem(storageKeys.NEW_NOTIFICATION, JSON.stringify(1))
     }
     let formData = JSON.parse(remoteMessage.data.data)
+    console.log('formData:', formData)
     //console.log(formData)
-   // console.log(JSON.parse(remoteMessage.data.data).title)    //form
+    // console.log(JSON.parse(remoteMessage.data.data).title)    //form
     // console.log(data)   //POSTMAN
-
-    let date = new Date(); 
-    let timestamp = await date.getDate()+'/'+date.getMonth()+1+'/'+date.getFullYear() // +'/'+date.getDay()
+    let date = new Date();
+    let month = date.getMonth() + 1
+    let timestamp = await date.getDate() + '/' + month + '/' + date.getFullYear() // +'/'+date.getDay()
     let data = {
-        body:formData.message,
-        title:formData.title,
-        goToLink:formData.goToLink,
-        imageUrl:formData.imageUrl,
-        timeStamp:timestamp,
+        body: formData.body,
+        title: formData.title,
+        // goToLink: formData.goToLink,
+        // imageUrl: formData.imageUrl,
+        timeStamp: timestamp,
     }
-    
+    console.log('data565656:', data)
     let previousData = await AsyncStorage.getItem(storageKeys.NOTIFICATION_DATA)
-    previousData=JSON.parse(previousData)
-    if(!previousData){
+    previousData = JSON.parse(previousData)
+    if (!previousData) {
         let notificationArray = []
         notificationArray.push(data)
-        await AsyncStorage.setItem(storageKeys.NOTIFICATION_DATA,JSON.stringify(notificationArray))
+        await AsyncStorage.setItem(storageKeys.NOTIFICATION_DATA, JSON.stringify(notificationArray))
         return notificationArray
-    }else{
+    } else {
         let notificationArray = []
-        notificationArray = [...previousData,data]
-        await AsyncStorage.setItem(storageKeys.NOTIFICATION_DATA,JSON.stringify(notificationArray))
+        notificationArray = [...previousData, data]
+        await AsyncStorage.setItem(storageKeys.NOTIFICATION_DATA, JSON.stringify(notificationArray))
         return notificationArray
     }
-    
+
 
 }
 
-function handleData(){
-	const obj = {
-		title:title,
-		message:message,
-		is_background:is_background,
-		image:image,
-		timeStamp:timeStamp,
-		payload:payload,
-		goToLink:goToLink,
-	}
+function handleData() {
+    const obj = {
+        title: title,
+        message: message,
+        is_background: is_background,
+        image: image,
+        timeStamp: timeStamp,
+        payload: payload,
+        goToLink: goToLink,
+    }
 }
-export const sendNotification = ()=>{
+export const sendNotification = () => {
     PushNotification.localNotification({
         /* Android Only Properties */
         largeIcon: "ic_launcher", // (optional) default: "ic_launcher"
@@ -126,12 +129,12 @@ export const sendNotification = ()=>{
         importance: "low", // (optional) set notification importance, default: high
         allowWhileIdle: false, // (optional) set notification to work while on doze, default: false
         ignoreInForeground: false, // (optional) if true, the notification will not be visible when the app is in the foreground (useful for parity with how iOS notifications appear)
-       
+
         /* iOS only properties */
         alertAction: "view", // (optional) default: view
         category: "", // (optional) default: empty string
         userInfo: {}, // (optional) default: {} (using null throws a JSON value '<null>' error)
-       
+
         /* iOS and Android properties */
         title: "My Notification Title", // (optional)
         message: "My Notification Message", // (required)
@@ -140,47 +143,47 @@ export const sendNotification = ()=>{
     });
 }
 
-export const clickNotification = () =>{
-    PushNotification.popInitialNotification(()=>{
+export const clickNotification = () => {
+    PushNotification.popInitialNotification(() => {
         //called when notification is clicked
     })
 }
 
-export const configureNotification =()=>{
+export const configureNotification = () => {
 
-PushNotification.configure({
-    // (optional) Called when Token is generated (iOS and Android)
-    onRegister: function (token) {
-      
-    },
-   
-    // (required) Called when a remote is received or opened, or local notification is opened
-    onNotification: function (notification) {
-   
-      // process the notification
-   
-      // (required) Called when a remote is received or opened, or local notification is opened
-      notification.finish(PushNotificationIOS.FetchResult.NoData);
-    },
-   
-    // IOS ONLY (optional): default: all - Permissions to register.
-    permissions: {
-      alert: true,
-      badge: true,
-      sound: true,
-    },
-   
-    // Should the initial notification be popped automatically
-    // default: true
-    popInitialNotification: true,
-   
-    /**
-     * (optional) default: true
-     * - Specified if permissions (ios) and token (android and ios) will requested or not,
-     * - if not, you must call PushNotificationsHandler.requestPermissions() later
-     * - if you are not using remote notification or do not have Firebase installed, use this:
-     *     requestPermissions: Platform.OS === 'ios'
-     */
-    requestPermissions: true,
-  });
+    PushNotification.configure({
+        // (optional) Called when Token is generated (iOS and Android)
+        onRegister: function (token) {
+
+        },
+
+        // (required) Called when a remote is received or opened, or local notification is opened
+        onNotification: function (notification) {
+
+            // process the notification
+
+            // (required) Called when a remote is received or opened, or local notification is opened
+            notification.finish(PushNotificationIOS.FetchResult.NoData);
+        },
+
+        // IOS ONLY (optional): default: all - Permissions to register.
+        permissions: {
+            alert: true,
+            badge: true,
+            sound: true,
+        },
+
+        // Should the initial notification be popped automatically
+        // default: true
+        popInitialNotification: true,
+
+        /**
+         * (optional) default: true
+         * - Specified if permissions (ios) and token (android and ios) will requested or not,
+         * - if not, you must call PushNotificationsHandler.requestPermissions() later
+         * - if you are not using remote notification or do not have Firebase installed, use this:
+         *     requestPermissions: Platform.OS === 'ios'
+         */
+        requestPermissions: true,
+    });
 }

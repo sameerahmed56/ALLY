@@ -5,7 +5,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-community/async-storage';
 import storageKeys from '../../../constants/storageKeys'
 import { TouchableRipple, Snackbar } from 'react-native-paper';
-import  colors from '../../../constants/colors';
+import colors from '../../../constants/colors';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { newNotification } from '../../../redux/actions'
@@ -37,6 +37,7 @@ export class NotificationScreen extends Component {
         await AsyncStorage.removeItem(storageKeys.NEW_NOTIFICATION)
         this.props.updateNotification(notificationData)
         let data = await AsyncStorage.getItem(storageKeys.NOTIFICATION_DATA)
+        console.log('data33:', data)
         data = JSON.parse(data)
         if (data == null || data.length == []) {
             this.setState({ available: false, loading: false })
@@ -82,9 +83,9 @@ export class NotificationScreen extends Component {
 
     notificationTile = (props) => {
         const { data, index } = props
-        if (!data.imageUrl) {
-            data.imageUrl = "no image"
-        }
+        // if (!data.imageUrl) {
+        //     data.imageUrl = "no image"
+        // }
         const swipeoutBtns = [
             {
                 text: 'DELETE',
@@ -111,14 +112,9 @@ export class NotificationScreen extends Component {
                     onPress={() => { this.props.navigation.navigate('Show Notification', { data: data }) }}
                 >
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-
-                        <Image style={{ width: 60, aspectRatio: 1, height: 60, borderRadius: 60, alignSelf: 'center', margin: 6 }}
-                            // onError={()=>{this.setState({imageLoadError:true})}}
-                            source={{ uri: data.imageUrl }} />
-
-
                         <View style={{ flexDirection: 'column', flex: 8, flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', marginLeft: 5 }}>
                             <Text style={{ color: colors.TEXT_PRIMARY, fontSize: 17 }}>{data.title}</Text>
+                            <Text style={{ color: colors.TEXT_PRIMARY, fontSize: 17 }}>{data.body}</Text>
                             <Text style={{ color: colors.TEXT_SECONDARY, fontSize: 13, margin: 5, alignSelf: 'flex-end', marginLeft: 15 }}>received on ~ {data.timeStamp}</Text>
                         </View>
                     </View>
@@ -134,9 +130,9 @@ export class NotificationScreen extends Component {
     render() {
 
         return (
-            
+
             <View style={{ ...styles.Container, backgroundColor: colors.BACKGROUND, }}>
-                <Header headerText="Notification" showBackBtn={true}/>
+                <Header headerText="Notification" showBackBtn={true} />
 
                 {
                     this.state.available &&
