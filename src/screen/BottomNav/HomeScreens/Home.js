@@ -9,53 +9,62 @@ class Home extends PureComponent {
     super(props)
 
     this.state = {
-      comingRequest: [
-        {
-          title: 'Need Help With Medicine',
-          description: 'Need Help With Medicine , Need Help With Medicine, Need Help With Medicine, Need Help With Medicine',
-          gpay: '7905332677',
-          accountNo: '0862100028059',
-          ifscCode: 'PSIB5656', 
-        },
-        {
-          title: 'Need Help With Medicine',
-          description: 'Need Help With Medicine , Need Help With Medicine, Need Help With Medicine, Need Help With Medicine',
-          gpay: '7905332677',
-          accountNo: '0862100028059',
-          ifscCode: 'PSIB5656', 
-        },
-        {
-          title: 'Need Help With Medicine',
-          description: 'Need Help With Medicine , Need Help With Medicine, Need Help With Medicine, Need Help With Medicine',
-          gpay: '7905332677',
-          accountNo: '0862100028059',
-          ifscCode: 'PSIB5656', 
-        }
-      ]
+      pendingList: [{
+        "acc_holder_name": "Aman Ahmed",
+        "acc_no": "00862100028059",
+        "ifsc": "HDFC0001913",
+        "image": "http://res.cloudinary.com/riz0000000001/image/upload/v1626265739/lffkokrcxekzpl1xt357.jpg",
+        "paytm": "7905@paytm",
+        "phone": "7905332677",
+        "phone_pay": "7905@ybl",
+        "request_description": "Need help sjahdkhdjhkshdks dajdhadha dkahdkad ahdkahd",
+        "request_id": 3,
+        "request_title": "Help Dedo Bhai",
+        "request_type": 1,
+        "upi_id": "790533267@apl",
+        "user_id": 2,
+        "user_name": "Sameer Ahmed"
+
+      }, {
+        "acc_holder_name": "Aman Ahmed",
+        "acc_no": "08621000038059",
+        "ifsc": "HDFC0001913",
+        "image": "http://res.cloudinary.com/riz0000000001/image/upload/v1626265739/lffkokrcxekzpl1xt357.jpg",
+        "paytm": "898",
+        "phone": "565654",
+        "phone_pay": "",
+        "request_description": "Need help",
+        "request_id": 3,
+        "request_title": "Help",
+        "request_type": 1,
+        "upi_id": "Bcn",
+        "user_id": 2,
+        "user_name": "Sameer Ahmed"
+      }],
     }
   }
 
   render() {
     const theme = colors
     return (
-      <View style={{flex: 1,backgroundColor: theme.TILE}}>
-        <Header headerText="Home" showBackBtn={false}/>
+      <View style={{ flex: 1, backgroundColor: theme.TILE }}>
+        <Header headerText="Home" showBackBtn={false} />
         <FlatList
-          data={this.state.comingRequest}
-          extraData={this.state.comingRequest}
+          data={this.state.pendingList}
+          extraData={this.state.pendingList}
           initialNumToRender={5}
-          renderItem={({ item, index }) => 
+          renderItem={({ item, index }) =>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('Give Help')}>
-              <Card style={{ backgroundColor: theme.WHITE, paddingVertical: 10, marginVertical: 5, marginHorizontal: 10, alignItems: 'center', width: DeviceWidth - 20 }}>
-                <Text style={{fontSize: 20, fontWeight: 'bold', color: theme.TEXT_PRIMARY}}>{item.title}</Text>
+              <Card style={{ backgroundColor: theme.WHITE, paddingVertical: 10, marginVertical: 5, paddingHorizontal: 10, marginHorizontal: 10, width: DeviceWidth - 20 }}>
+                <Text style={{ fontSize: 18, fontWeight: 'bold', color: theme.TEXT_PRIMARY }}>{item.user_name}</Text>
                 <Image
                   source={require("../../../assets/hands.png")}
-                  style={{ height: DeviceWidth - 180 , width: DeviceWidth - 120 , marginHorizontal: 5, }}
+                  style={{ height: DeviceWidth - 180, width: DeviceWidth - 120, marginHorizontal: 5, }}
                   resizeMode="contain"
                 />
               </Card>
             </TouchableOpacity>
-        } />      
+          } />
       </View>
     )
   }

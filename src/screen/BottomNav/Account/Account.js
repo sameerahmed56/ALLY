@@ -209,8 +209,8 @@ class Account extends PureComponent {
     return (
       <View style={{ flex: 1 }}>
         <Header headerText="Account" showBackBtn={false} />
-        <View style={{ backgroundColor: theme.WHITE, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 10, marginBottom: 5, justifyContent: 'flex-start' }} >
-          <TouchableOpacity onPress={() => { this.addImage() }} style={{ flexDirection: 'column', width: 80, height: 80, alignSelf: 'center', marginLeft: 20, marginVertical: 10 }}>
+        <View style={{ backgroundColor: theme.WHITE, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 10, marginBottom: 5, justifyContent: 'flex-start' }} >
+          <TouchableOpacity onPress={() => { this.addImage() }} style={{ flexDirection: 'column', width: 80, height: 80, alignSelf: 'center', marginLeft: 10, marginVertical: 10 }}>
             <Image style={{ width: 80, height: 80, borderRadius: 60, borderWidth: 1, borderColor: theme.PRIMARY }} source={{ uri: 'https://i.ibb.co/Z8fQZG6/Profile-PNG-Icon-715x715.png' }} />
             <View style={{ position: "absolute", bottom: 5, right: 5, backgroundColor: theme.THEME_ORANGE, borderRadius: 5, paddingVertical: 2, paddingHorizontal: 3 }}>
               <Icon name="camera" size={15} color={theme.TILE} />

@@ -13,29 +13,6 @@ class Admin extends PureComponent {
         super(props)
 
         this.state = {
-            comingRequest: [
-                {
-                    title: 'Need Help With Medicine',
-                    description: 'Need Help With Medicine , Need Help With Medicine, Need Help With Medicine, Need Help With Medicine',
-                    gpay: '7905332677',
-                    accountNo: '0862100028059',
-                    ifscCode: 'PSIB5656',
-                },
-                {
-                    title: 'Need Help With Medicine',
-                    description: 'Need Help With Medicine , Need Help With Medicine, Need Help With Medicine, Need Help With Medicine',
-                    gpay: '7905332677',
-                    accountNo: '0862100028059',
-                    ifscCode: 'PSIB5656',
-                },
-                {
-                    title: 'Need Help With Medicine',
-                    description: 'Need Help With Medicine , Need Help With Medicine, Need Help With Medicine, Need Help With Medicine',
-                    gpay: '7905332677',
-                    accountNo: '0862100028059',
-                    ifscCode: 'PSIB5656',
-                }
-            ],
             pendingList: [{
                 "acc_holder_name": "Aman Ahmed",
                 "acc_no": "00862100028059",
