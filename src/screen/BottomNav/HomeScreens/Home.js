@@ -4,46 +4,34 @@ import { Button, Snackbar, TextInput, Card } from 'react-native-paper';
 import { color } from 'react-native-reanimated';
 import Header from '../../../component/Header'
 import colors from '../../../constants/colors'
+import urls from '../../../constants/urls'
+import { getRequest } from '../../../services/NetworkRequest'
 class Home extends PureComponent {
   constructor(props) {
     super(props)
 
     this.state = {
-      pendingList: [{
-        "acc_holder_name": "Aman Ahmed",
-        "acc_no": "00862100028059",
-        "ifsc": "HDFC0001913",
-        "image": "http://res.cloudinary.com/riz0000000001/image/upload/v1626265739/lffkokrcxekzpl1xt357.jpg",
-        "paytm": "7905@paytm",
-        "phone": "7905332677",
-        "phone_pay": "7905@ybl",
-        "request_description": "Need help sjahdkhdjhkshdks dajdhadha dkahdkad ahdkahd",
-        "request_id": 3,
-        "request_title": "Help Dedo Bhai",
-        "request_type": 1,
-        "upi_id": "790533267@apl",
-        "user_id": 2,
-        "user_name": "Sameer Ahmed"
-
-      }, {
-        "acc_holder_name": "Aman Ahmed",
-        "acc_no": "08621000038059",
-        "ifsc": "HDFC0001913",
-        "image": "http://res.cloudinary.com/riz0000000001/image/upload/v1626265739/lffkokrcxekzpl1xt357.jpg",
-        "paytm": "898",
-        "phone": "565654",
-        "phone_pay": "",
-        "request_description": "Need help",
-        "request_id": 3,
-        "request_title": "Help",
-        "request_type": 1,
-        "upi_id": "Bcn",
-        "user_id": 2,
-        "user_name": "Sameer Ahmed"
-      }],
+      pendingList: [],
     }
   }
-
+  async componentDidMount() {
+    this.setData()
+  }
+  setData = async () => {
+    try {
+      const response = await getRequest(urls.ALL_POST)
+      console.log('response:', response)
+      this.setState({ pendingList: response })
+    } catch (error) {
+      console.log('error:', error)
+    }
+  }
+  goToGiveHelp = (item) => {
+    console.log('item:', item)
+    this.props.navigation.navigate('Give Help', {
+      onePostData: item
+    })
+  }
   render() {
     const theme = colors
     return (
@@ -54,14 +42,16 @@ class Home extends PureComponent {
           extraData={this.state.pendingList}
           initialNumToRender={5}
           renderItem={({ item, index }) =>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Give Help')}>
+            <TouchableOpacity onPress={() => this.goToGiveHelp(item)} activeOpacity={0.8}>
               <Card style={{ backgroundColor: theme.WHITE, paddingVertical: 10, marginVertical: 5, paddingHorizontal: 10, marginHorizontal: 10, width: DeviceWidth - 20 }}>
-                <Text style={{ fontSize: 18, fontWeight: 'bold', color: theme.TEXT_PRIMARY }}>{item.user_name}</Text>
+                <Text style={{ fontSize: 18, color: theme.TEXT_PRIMARY, letterSpacing: 1 }}>{item.user_name}</Text>
                 <Image
-                  source={require("../../../assets/hands.png")}
-                  style={{ height: DeviceWidth - 180, width: DeviceWidth - 120, marginHorizontal: 5, }}
+                  source={{ uri: item.image }}
+                  style={{ height: (DeviceWidth - 40) * (item.image_ht / item.image_width), width: DeviceWidth - 40 }}
                   resizeMode="contain"
                 />
+                <Text style={{ fontSize: 15, color: theme.TEXT_PRIMARY, }}>{item.request_title}</Text>
+                <Text style={{ fontSize: 14, color: theme.TEXT_SECONDARY, }}>{item.request_description}</Text>
               </Card>
             </TouchableOpacity>
           } />

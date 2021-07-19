@@ -38,7 +38,9 @@ class SubmitRequest extends Component {
             phone_pay: params.phonePe,
             file: params.file,
             title: params.title,
-            description: params.description
+            description: params.description,
+            height: params.height,
+            width: params.width
         })
         console.log('submitBody:', submitBody)
         try {

@@ -9,29 +9,14 @@ class GiveHelp extends PureComponent {
     super(props)
 
     this.state = {
-      requestData: {
-        "acc_holder_name": "Aman Ahmed",
-        "acc_no": "00862100028059",
-        "ifsc": "HDFC0001913",
-        "image": "http://res.cloudinary.com/riz0000000001/image/upload/v1626265739/lffkokrcxekzpl1xt357.jpg",
-        "paytm": "7905332677",
-        "phone": "7905332677",
-        "phone_pay": "7905@ybl",
-        "request_description": "Need help sjahdkhdjhkshdks da jdhadha dkasssss hdkad ahdkahd",
-        "request_id": 3,
-        "request_title": "Help Dedo Bhai",
-        "request_type": 1,
-        "upi_id": "790533267@apl",
-        "user_id": 2,
-        "gpay": '7905332677',
-        "amazon_pay": '7905332677',
-        "phone_pay": '7905332677',
-        "user_name": "Sameer Ahmed"
-
-      }
+      requestData: {},
     }
   }
-
+  componentDidMount() {
+    const onePostData = this.props.route.params.onePostData
+    console.log('onePostData:', typeof onePostData.image_ht)
+    this.setState({ requestData: onePostData })
+  }
   render() {
     const theme = colors
     const { requestData } = this.state
@@ -41,8 +26,8 @@ class GiveHelp extends PureComponent {
         <ScrollView style={{ paddingVertical: 10, paddingHorizontal: 20, backgroundColor: theme.WHITE }} >
           <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.TEXT_PRIMARY }}>{requestData.request_title}</Text>
           <Image
-            source={require("../../../assets/hands.png")}
-            style={{ height: DeviceWidth, width: DeviceWidth - 20, marginHorizontal: 5, }}
+            source={{ uri: requestData.image }}
+            style={{ height: (DeviceWidth - 40), width: DeviceWidth - 40, }}
             resizeMode="contain"
           />
           <View style={{}}>
@@ -65,7 +50,7 @@ class GiveHelp extends PureComponent {
                 style={{ height: 60, width: 50, }}
                 resizeMode="contain"
               />
-              <Text style={{ fontSize: 16, color: theme.TEXT_PRIMARY, }}>{requestData.upi_id}</Text>
+              <Text style={{ fontSize: 14, color: theme.TEXT_PRIMARY, }}>{requestData.upi_id}</Text>
             </View>
           }
           {
@@ -76,7 +61,7 @@ class GiveHelp extends PureComponent {
                 style={{ height: 30, width: 50, }}
                 resizeMode="contain"
               />
-              <Text style={{ fontSize: 16, color: theme.TEXT_PRIMARY, }}>{requestData.gpay}</Text>
+              <Text style={{ fontSize: 14, color: theme.TEXT_PRIMARY, }}>{requestData.gpay}</Text>
             </View>
           }
           {
@@ -87,7 +72,7 @@ class GiveHelp extends PureComponent {
                 style={{ height: 30, width: 50, tintColor: theme.ATT_ORANGE }}
                 resizeMode="contain"
               />
-              <Text style={{ fontSize: 16, color: theme.TEXT_PRIMARY, }}>{requestData.amazon_pay}</Text>
+              <Text style={{ fontSize: 14, color: theme.TEXT_PRIMARY, }}>{requestData.amazon_pay}</Text>
             </View>
           }
           {
@@ -98,7 +83,7 @@ class GiveHelp extends PureComponent {
                 style={{ height: 30, width: 50, }}
                 resizeMode="contain"
               />
-              <Text style={{ fontSize: 16, color: theme.TEXT_PRIMARY, }}>{requestData.phone_pay}</Text>
+              <Text style={{ fontSize: 14, color: theme.TEXT_PRIMARY, }}>{requestData.phone_pay}</Text>
             </View>
           }
           {
@@ -109,7 +94,7 @@ class GiveHelp extends PureComponent {
                 style={{ height: 30, width: 50, }}
                 resizeMode="contain"
               />
-              <Text style={{ fontSize: 16, color: theme.TEXT_PRIMARY, }}>{requestData.paytm}</Text>
+              <Text style={{ fontSize: 14, color: theme.TEXT_PRIMARY, }}>{requestData.paytm}</Text>
             </View>
           }
         </ScrollView>

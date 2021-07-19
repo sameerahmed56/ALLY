@@ -29,13 +29,15 @@ class AddPaymentInfo extends Component {
             phoneNo: '',
             bankName: '',
             branch: "",
-            address: ''
+            address: '',
+            height: 0,
+            width: 0
         }
     }
     componentDidMount() {
         const params = this.props.route.params
         console.log('params:', params)
-        this.setState({ title: params.title, description: params.description, selectedImageUri: params.selectedImageUri, file: params.file })
+        this.setState({ title: params.title, description: params.description, selectedImageUri: params.selectedImageUri, file: params.file, height: params.height, width: params.width })
     }
     verifyIfsc = async () => {
         try {
@@ -54,7 +56,7 @@ class AddPaymentInfo extends Component {
         }
     }
     gotToSubmitRequest = async () => {
-        const { title, description, selectedImageUri, file, gpay, phonePe, amazonPay, paytm, upi, accountNo, accountHolderName, ifsc, phoneNo } = this.state
+        const { title, description, selectedImageUri, file, gpay, phonePe, amazonPay, paytm, upi, accountNo, accountHolderName, ifsc, phoneNo, height, width } = this.state
         this.props.navigation.navigate('Submit Request', {
             description: description,
             title: title,
@@ -67,7 +69,9 @@ class AddPaymentInfo extends Component {
             accountHolderName: accountHolderName,
             ifsc: ifsc,
             phoneNo: phoneNo,
-            file: file
+            file: file,
+            height: height,
+            width: width
         })
     }
     render() {
@@ -211,10 +215,10 @@ class AddPaymentInfo extends Component {
                             keyboardType="phone-pad"
                         />
                     </View>
+                    <TouchableOpacity onPress={() => { this.gotToSubmitRequest() }} style={{ backgroundColor: theme.PRIMARY, marginHorizontal: 20, marginVertical: 15, paddingVertical: 12, justifyContent: 'center', alignItems: 'center', borderRadius: 10, marginBottom: 8 }}>
+                        <Text style={{ color: theme.TEXT_WHITE, fontSize: 16, letterSpacing: 0.3, lineHeight: 18, fontWeight: 'bold', }}>Proceed</Text>
+                    </TouchableOpacity>
                 </ScrollView>
-                <TouchableOpacity onPress={() => { this.gotToSubmitRequest() }} style={{ backgroundColor: theme.PRIMARY, marginHorizontal: 20, paddingVertical: 12, justifyContent: 'center', alignItems: 'center', borderRadius: 10, marginBottom: 8 }}>
-                    <Text style={{ color: theme.TEXT_WHITE, fontSize: 16, letterSpacing: 0.3, lineHeight: 18, fontWeight: 'bold', }}>Proceed</Text>
-                </TouchableOpacity>
             </View>
         )
     }

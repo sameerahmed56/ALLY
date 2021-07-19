@@ -28,7 +28,9 @@ export default class AddImage extends Component {
             fileName: '',
             fileType: '',
             base64Image: '',
-            file: ''
+            file: '',
+            height: 0,
+            width: 0
         }
     }
     componentDidMount() {
@@ -124,7 +126,7 @@ export default class AddImage extends Component {
             let fileUploadResp = await response.json()
             console.log(fileUploadResp)
             if (fileUploadResp.msg == "success") {
-                this.setState({ fileName: name, uploadedFName: fileUploadResp.data, snackbarMsg: 'File successfully uploaded', snackbarVisibility: true, file: fileUploadResp.url })
+                this.setState({ fileName: name, uploadedFName: fileUploadResp.data, snackbarMsg: 'File successfully uploaded', snackbarVisibility: true, file: fileUploadResp.url, height: fileUploadResp.height, width: fileUploadResp.width })
             }
             return (fileUploadResp)
         } catch (err) {
@@ -173,12 +175,14 @@ export default class AddImage extends Component {
     }
 
     goToPayment = async () => {
-        const { description, title, selectedImageName, selectedImageType, file, selectedImageUri } = this.state
+        const { description, title, selectedImageName, selectedImageType, file, selectedImageUri, height, width } = this.state
         this.props.navigation.navigate('Add Payment Info', {
             description: description,
             title: title,
             file: file,
             selectedImageUri: selectedImageUri,
+            height: height,
+            width: width
         })
     }
     render() {

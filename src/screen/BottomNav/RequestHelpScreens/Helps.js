@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Dimensions, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import Header from '../../../component/Header'
 import color from '../../../constants/colors'
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons'
@@ -9,6 +9,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import { FloatingAction } from "react-native-floating-action";
 import urls from '../../../constants/urls'
 import { getRequest } from '../../../services/NetworkRequest'
+import ScrollableTabView, { DefaultTabBar, ScrollableTabBar } from 'react-native-scrollable-tab-view'
 
 class Helps extends PureComponent {
   constructor(props) {
@@ -19,7 +20,7 @@ class Helps extends PureComponent {
     }
   }
   async componentDidMount() {
-    // const response = await getRequest(urls.REQUEST_CATEGORY)
+    // const response = await getRequest(urls.MY_REQUESTS)
     // console.log('response:', response)
   }
   render() {
@@ -40,7 +41,38 @@ class Helps extends PureComponent {
   }
 }
 
-export default Helps;;
+export default Helps;
+const DeviceWidth = Dimensions.get('window').width
+const DeviceHeight = Dimensions.get('window').height
+
+const styles = StyleSheet.create({
+  Container: {
+    flex: 1
+  },
+  Tile: {
+    width: DeviceWidth,
+    marginTop: 10
+  },
+  tabStyle: {},
+  scrollStyle: {
+    backgroundColor: 'white',
+    paddingLeft: 65,
+    paddingRight: 65,
+    // justifyContent: 'center',
+  },
+  tabBarTextStyle: {
+    fontSize: 15,
+    fontWeight: 'normal',
+  },
+  underlineStyle: {
+    height: 2.5,
+    width: DeviceWidth / 2,
+    borderRadius: 3,
+  },
+
+
+});
+
 const actions = [
   {
     text: "Medical Help",

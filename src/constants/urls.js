@@ -1,5 +1,5 @@
 // const BASE_URL = "https://tech.kiet.edu/api/hrms/";
-const BASE_URL = "https://3b58057a5dc3.ngrok.io/";
+const BASE_URL = "https://eeb1b0534c03.ngrok.io/";
 // const BASE_URL = 'http://10.42.0.17:8000/'
 // const BASE_URL = 'http://192.168.42.55:8000';
 
@@ -20,5 +20,7 @@ export default {
     UPLOAD_IMAGE: BASE_URL + 'upload',
     PENDING_REQUESTS: BASE_URL + 'pending_requests',
     APPROVE_REJECT_REQUEST: BASE_URL + 'requests_status_update',
-    ALL_POST: BASE_URL + 'posts'
+    ALL_POST: BASE_URL + 'posts',
+    MY_REQUESTS: BASE_URL + 'my_requests',
+    PROFILE_PIC_UPLOAD: BASE_URL + 'profile_pic_upload'
 }
