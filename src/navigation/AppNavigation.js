@@ -18,6 +18,7 @@ import { AnimatedTabBarNavigator, IAppearanceOptions, TabButtonLayout, TabElemen
 import { color } from 'react-native-reanimated';
 import ForgotPassword from '../screen/LoginScreen/ForgotPassword';
 import ChangePassword from '../screen/LoginScreen/ChangePassword';
+import storageKeys from '../constants/storageKeys';
 import { connect } from 'react-redux'
 // import { bindActionCreators } from 'redux'
 // import { switchTheme, newNotification, loggedIn } from '../redux/actions'
@@ -48,11 +49,7 @@ export default class AppNavigation extends React.Component {
   }
 
   logout = async () => {
-    let removeItem = [storageKeys.SAVED_CREDENTIALS]; //add key you don't want to delete on logout
-    let keys = await AsyncStorage.getAllKeys();
-    for (let i = 0; i < removeItem.length; i++) {
-      keys.splice(keys.indexOf(removeItem[i]), 1);
-    }
+    let keys = await AsyncStorage.getAllKeys
     await AsyncStorage.multiRemove(keys);
     this.setState({ LoggedIn: false });
   };
@@ -131,6 +128,7 @@ const HelpStack = (props) => (
     <StackNavigator.Screen name="Add Image" component={AddImage} />
     <StackNavigator.Screen name="Add Payment Info" component={AddPaymentInfo} />
     <StackNavigator.Screen name="Submit Request" component={SubmitRequest} />
+    <StackNavigator.Screen name="Give Help" component={GiveHelp} />
   </StackNavigator.Navigator>
 
 )
@@ -149,22 +147,22 @@ const AccountStack = (props) => (
   </StackNavigator.Navigator>
 
 )
-const Tab = AnimatedTabBarNavigator();
+const Tab = createBottomTabNavigator();
 const TabNavigator = props => {
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      IAppearanceOptions="float"
       tabBarOptions={{
         // activeTintColor: colors.WHITE,
-        activeBackgroundColor: colors.PRIMARY, //60708d
+        activeBackgroundColor: colors.BACKGROUND, //60708d
         inactiveBackgroundColor: colors.WHITE, //00223d
         activeTintColor: colors.WHITE,
         inactiveTintColor: colors.TEXT_SECONDARY,
         adaptive: true,
-        tabStyle: { marginBottom: 10, marginHorizontal: 10, borderRadius: 50 },
+        keyboardHidesTabBar: true,
+        showLabel: false,
         style: {
-          height: 55,
+          height: 58,
         },
       }}
       appearance={{
@@ -178,7 +176,7 @@ const TabNavigator = props => {
             <Icon
               name={focused ? 'home' : 'home-outline'}
               size={size ? size : 24}
-              color={focused ? colors.WHITE : colors.TEXT_SECONDARY}
+              color={focused ? colors.PRIMARY : colors.TEXT_SECONDARY}
               focused={focused}
             />
           )
@@ -189,7 +187,7 @@ const TabNavigator = props => {
             <FontAwesome
               name={focused ? 'hands-helping' : 'hand-holding-heart'}
               size={size ? size : 24}
-              color={focused ? colors.WHITE : colors.TEXT_SECONDARY}
+              color={focused ? colors.PRIMARY : colors.TEXT_SECONDARY}
               focused={focused}
             />
           )
@@ -201,7 +199,7 @@ const TabNavigator = props => {
             <Icon
               name={focused ? 'account' : 'account-outline'}
               size={size ? size : 24}
-              color={focused ? colors.WHITE : colors.TEXT_SECONDARY}
+              color={focused ? colors.PRIMARY : colors.TEXT_SECONDARY}
               focused={focused}
             />
           )

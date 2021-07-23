@@ -31,13 +31,16 @@ class AddPaymentInfo extends Component {
             branch: "",
             address: '',
             height: 0,
-            width: 0
+            width: 0,
+            categoryHelp: '',
+            snackbarVisibility: false,
+            snackbarMsg: ''
         }
     }
     componentDidMount() {
         const params = this.props.route.params
         console.log('params:', params)
-        this.setState({ title: params.title, description: params.description, selectedImageUri: params.selectedImageUri, file: params.file, height: params.height, width: params.width })
+        this.setState({ title: params.title, description: params.description, selectedImageUri: params.selectedImageUri, file: params.file, height: params.height, width: params.width, categoryHelp: params.categoryHelp })
     }
     verifyIfsc = async () => {
         try {
@@ -45,40 +48,53 @@ class AddPaymentInfo extends Component {
             let bankDetail = await getRequest(url)
             console.log('bankDetail:', bankDetail)
             if (typeof bankDetail == 'object') {
-                this.setState({ branch: bankDetail.BRANCH, bankName: bankDetail.BANK, address: bankDetail.ADDRESS, isIfscValid: true })
+                this.setState({ branch: bankDetail.BRANCH, bankName: bankDetail.BANK, address: bankDetail.ADDRESS, isIfscValid: true, snackbarVisibility: true, snackbarMsg: 'IFSC veriifed' })
             }
             else {
+                this.setState({ snackbarVisibility: true, snackbarMsg: 'IFSC Invalid' })
                 this.setState({ isIfscValid: false })
             }
         } catch (error) {
+            this.setState({ snackbarVisibility: true, snackbarMsg: 'Error while trying to verify IFSC' })
             console.log('error:', error)
             this.setState({ isIfscValid: false })
         }
     }
     gotToSubmitRequest = async () => {
-        const { title, description, selectedImageUri, file, gpay, phonePe, amazonPay, paytm, upi, accountNo, accountHolderName, ifsc, phoneNo, height, width } = this.state
-        this.props.navigation.navigate('Submit Request', {
-            description: description,
-            title: title,
-            gpay: gpay,
-            phonePe: phonePe,
-            amazonPay: amazonPay,
-            paytm: paytm,
-            upi: upi,
-            accountNo: accountNo,
-            accountHolderName: accountHolderName,
-            ifsc: ifsc,
-            phoneNo: phoneNo,
-            file: file,
-            height: height,
-            width: width
-        })
+        const { title, description, selectedImageUri, file, gpay, isIfscValid, phonePe, amazonPay, paytm, upi, accountNo, accountHolderName, ifsc, phoneNo, height, width } = this.state
+        if (isIfscValid) {
+            if (accountNo.trim() !== '' && accountHolderName.trim() !== '' && ifsc.trim() !== '' && upi.trim() !== '') {
+                this.props.navigation.navigate('Submit Request', {
+                    description: description,
+                    title: title,
+                    gpay: gpay,
+                    phonePe: phonePe,
+                    amazonPay: amazonPay,
+                    paytm: paytm,
+                    upi: upi,
+                    accountNo: accountNo,
+                    accountHolderName: accountHolderName,
+                    ifsc: ifsc,
+                    phoneNo: phoneNo,
+                    file: file,
+                    height: height,
+                    width: width,
+                    categoryHelp: categoryHelp
+                })
+            }
+            else {
+                this.setState({ snackbarVisibility: true, snackbarMsg: 'Fill all mandatory fields correctly' })
+            }
+        }
+        else {
+            this.setState({ snackbarVisibility: true, snackbarMsg: 'Fill all mandatory fields correctly' })
+        }
     }
     render() {
         const theme = colors
         const { gpay, phonePe, amazonPay, paytm, upi, accountNo, accountHolderName, ifsc, isIfscValid, phoneNo, bankName, branch, address } = this.state
         return (
-            <View style={{ flex: 1, backgroundColor: theme.BACKGROUND }}>
+            <View style={{ flex: 1, backgroundColor: theme.WHITE }}>
                 <Header headerText="Add Payment Details" showBackBtn={true} />
                 <ScrollView style={{ marginVertical: 10 }}>
                     <View style={styles.textInputContainer}>
@@ -109,6 +125,7 @@ class AddPaymentInfo extends Component {
                         <TextInput
                             style={{ ...styles.textInputStyle, flex: 1 }}
                             value={this.state.ifsc}
+                            onChangeText={() => { this.setState({ isIfscValid: false }) }}
                             mode='flat'
                             theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
                             label='IFSC *'
@@ -219,6 +236,20 @@ class AddPaymentInfo extends Component {
                         <Text style={{ color: theme.TEXT_WHITE, fontSize: 16, letterSpacing: 0.3, lineHeight: 18, fontWeight: 'bold', }}>Proceed</Text>
                     </TouchableOpacity>
                 </ScrollView>
+                <Snackbar
+                    visible={this.state.snackbarVisibility}
+                    style={{ backgroundColor: theme.PRIMARY_DARK, marginBottom: 30, borderRadius: 5 }}
+                    duration={3000}
+                    onDismiss={() => this.setState({ snackbarVisibility: false })}
+                    action={{
+                        label: 'Ok',
+                        color: theme.TEXT_WHITE,
+                        onPress: () => {
+                            this.setState({ snackbarVisibility: false })
+                        },
+                    }}>
+                    <Text style={{ color: theme.TEXT_WHITE, fontSize: 15 }}>{this.state.snackbarMsg}</Text>
+                </Snackbar>
             </View>
         )
     }

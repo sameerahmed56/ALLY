@@ -6,16 +6,18 @@ import { newNotification } from '../../../redux/actions';
 import store from '../../../redux/store'
 import * as Animatable from "react-native-animatable";
 // import DeviceInfo from 'react-native-simple-device-info';
-// import { MyContext } from '../../../navigation/AppNavigation'
+import { MyContext } from '../../../navigation/AppNavigation'
 import colors from '../../../constants/colors';
 import * as ImagePicker from 'react-native-image-picker';
+import { Snackbar } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons'
 import Header from '../../../component/Header'
 import urls from '../../../constants/urls'
 import { isNetworkConnected, postRequest, getRequest } from '../../../services/NetworkRequest'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import storageKeys from '../../../constants/storageKeys';
-
+import { getToken, requestPermission, checkPermission, sendNotification } from '../../../services/pushNotification'
+import DeviceInfo from 'react-native-simple-device-info';
 class Account extends PureComponent {
   constructor(props) {
     super(props);
@@ -39,21 +41,24 @@ class Account extends PureComponent {
       profile_pic: 'https://i.ibb.co/Z8fQZG6/Profile-PNG-Icon-715x715.png',
       name: '',
       gender: '',
-      email: ''
+      email: '',
+      selectedTab: 'Notification'
     };
   }
   async componentDidMount() {
     let loginData = await AsyncStorage.getItem(storageKeys.LOGIN_DATA)
+    console.log('loginData:', loginData)
     if (loginData) {
       loginData = JSON.parse(loginData)
       const isAdmin = loginData.admin
-      this.setState({ isAdmin: isAdmin })
+      this.setState({ isAdmin: isAdmin, })
     }
     try {
       let profileResponse = await getRequest(urls.PROFILE)
       console.log('profileResponse:', profileResponse)
       this.setState({ profile_pic: profileResponse.profile_pic, email: profileResponse.email, gender: profileResponse.gender, name: profileResponse.name })
     } catch (error) {
+      console.log('error2:', error)
 
     }
     // this.setData()
@@ -215,37 +220,98 @@ class Account extends PureComponent {
       }
     });
   }
+  logout = async (logout) => {
+    const { email } = this.state
+    const token = await getToken()
+    console.log('token:', token)
+    if (token) {
+      const device_id = await DeviceInfo.getUniqueID()
+      const fcmInsertBody = JSON.stringify({
+        fcm_token: token,
+        device_id: device_id,
+        email: email
+      })
+      console.log('fcmInsertBody:', fcmInsertBody)
+      try {
+
+        let response = await postRequest(urls.FCM_DELETE, fcmInsertBody)
+        console.log('response:', response)
+        if (response.msg === 'fcm deleted successfully') {
+          const logoutResponse = await getRequest(urls.LOGOUT)
+          console.log('logoutResponse:', logoutResponse)
+          if (logoutResponse.msg === 'logout success') {
+            let keys = await AsyncStorage.getAllKeys()
+            await AsyncStorage.multiRemove(keys)
+            setTimeout(logout, 800)
+          }
+          else {
+            console.log('logout not done')
+          }
+        }
+        else {
+          console.log('logout not done')
+        }
+
+      } catch (e) {
+        console.log('e:', e)
+        //failed to set fcm
+      }
+    }
+  }
   render() {
     const theme = colors
     const badgeCount = store.getState().reducer.newNotification
     console.log(badgeCount.count)
-
+    const { selectedTab } = this.state
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: theme.BACKGROUND }}>
         <Header headerText="Account" showBackBtn={false} />
-        <View style={{ backgroundColor: theme.WHITE, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 10, marginBottom: 5, justifyContent: 'flex-start' }} >
-          <TouchableOpacity onPress={() => { this.addImage() }} style={{ flexDirection: 'column', width: 80, height: 80, alignSelf: 'center', marginLeft: 10, marginVertical: 10 }}>
-            <Image style={{ width: 80, height: 80, borderRadius: 60, borderWidth: 1, borderColor: theme.PRIMARY }} source={{ uri: this.state.profile_pic }} />
-            <View style={{ position: "absolute", bottom: 5, right: 5, backgroundColor: theme.THEME_ORANGE, borderRadius: 5, paddingVertical: 2, paddingHorizontal: 3 }}>
-              <Icon name="camera" size={15} color={theme.TILE} />
+        <View style={{ backgroundColor: theme.WHITE, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, marginHorizontal: 20, borderRadius: 15, elevation: 3, marginTop: 30, paddingVertical: 5, marginBottom: 20, justifyContent: 'flex-start' }} >
+          <TouchableOpacity onPress={() => { this.addImage() }} style={{ flexDirection: 'column', width: 60, height: 60, alignSelf: 'center', marginLeft: 10, marginVertical: 10 }}>
+            <Image style={{ width: 60, height: 60, borderRadius: 60, borderWidth: 1, borderColor: theme.PRIMARY }} source={{ uri: this.state.profile_pic }} />
+            <View style={{ position: "absolute", bottom: 5, right: 0, backgroundColor: theme.THEME_ORANGE, borderRadius: 5, paddingVertical: 2, paddingHorizontal: 3 }}>
+              <Icon name="camera" size={10} color={theme.TILE} />
             </View>
           </TouchableOpacity>
           <View style={{ marginLeft: 15 }}>
-            <Text style={{ color: theme.TEXT_PRIMARY, fontSize: 22, letterSpacing: 0.8 }}>{this.state.name}</Text>
-            <Text style={{ color: theme.TEXT_SECONDARY, fontSize: 16, letterSpacing: 0.8 }}>{this.state.gender}</Text>
+            <Text style={{ color: theme.TEXT_PRIMARY, fontSize: 20, letterSpacing: 0.8 }}>{this.state.name}</Text>
+            <Text style={{ color: theme.TEXT_SECONDARY, fontSize: 15, letterSpacing: 0.8 }}>{this.state.gender}</Text>
           </View>
         </View>
-        <TouchableOpacity onPress={() => { this.props.navigation.navigate("Notification Screen") }} activeOpacity={0.8}>
-          <View style={{ backgroundColor: colors.BACKGROUND, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', paddingLeft: 10, paddingVertical: 15, borderRadius: 3, elevation: 2 }}>
-            <IconWithBadge name="bell" size={27} color={colors.THEME_ORANGE} badgeCount={badgeCount.count} />
-            <Text style={{ color: colors.TEXT_PRIMARY, fontSize: 16, paddingLeft: 15 }}>Notification</Text>
+        <TouchableOpacity onPress={() => { this.setState({ selectedTab: 'Notification' }), this.props.navigation.navigate('Notification Screen') }}>
+          <View style={{ marginHorizontal: 20, paddingHorizontal: 20, marginVertical: 3, paddingVertical: 18, flexDirection: 'row', borderRadius: 15, backgroundColor: selectedTab === 'Notification' ? theme.PRIMARY_DARK : theme.BACKGROUND, alignItems: 'center' }}>
+            <IconWithBadge name="bell" size={27} color={selectedTab === 'Notification' ? theme.WHITE : theme.PRIMARY_DARK} badgeCount={badgeCount.count} />
+            <Text style={{ color: selectedTab === 'Notification' ? theme.TEXT_WHITE : theme.TEXT_PRIMARY, fontSize: 16, letterSpacing: 0.36, lineHeight: 25, marginLeft: 27 }}>Notification</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => { this.props.navigation.navigate("Admin") }} activeOpacity={0.8}>
-          <View style={{ backgroundColor: colors.BACKGROUND, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', paddingLeft: 10, paddingVertical: 15, borderRadius: 3, elevation: 2 }}>
-            <Text style={{ color: colors.TEXT_PRIMARY, fontSize: 16, paddingLeft: 15 }}>Admin</Text>
+
+        <TouchableOpacity onPress={() => { this.setState({ selectedTab: 'Admin' }), this.props.navigation.navigate('Admin') }}>
+          <View style={{ marginHorizontal: 20, paddingHorizontal: 20, marginVertical: 3, paddingVertical: 18, flexDirection: 'row', borderRadius: 15, backgroundColor: selectedTab === 'Admin' ? theme.PRIMARY_DARK : theme.BACKGROUND, alignItems: 'center' }}>
+            <Image
+              source={require('../../../assets/setting.png')}
+              style={{ height: 17, width: 17, tintColor: selectedTab === 'Admin' ? theme.WHITE : theme.TEXT_PRIMARY }}
+              resizeMode="contain"
+            />
+            <Text style={{ color: selectedTab === 'Admin' ? theme.TEXT_WHITE : theme.TEXT_PRIMARY, fontSize: 16, letterSpacing: 0.36, lineHeight: 25, marginLeft: 27 }}>Admin</Text>
           </View>
         </TouchableOpacity>
+        <MyContext.Consumer>
+          {
+            value => (
+              <TouchableOpacity onPress={() => { this.setState({ selectedTab: 'Log Out' }), this.logout(value) }}>
+                <View style={{ marginHorizontal: 20, paddingHorizontal: 20, marginVertical: 3, paddingVertical: 18, flexDirection: 'row', borderRadius: 15, backgroundColor: selectedTab === 'Log Out' ? theme.PRIMARY_DARK : theme.BACKGROUND, alignItems: 'center' }}>
+                  <Image
+                    source={require('../../../assets/logout.png')}
+                    style={{ height: 17, width: 17, tintColor: selectedTab === 'Log Out' ? theme.WHITE : theme.TEXT_PRIMARY }}
+                    resizeMode="contain"
+                  />
+                  <Text style={{ color: selectedTab === 'Log Out' ? theme.TEXT_WHITE : theme.TEXT_PRIMARY, fontSize: 16, letterSpacing: 0.36, lineHeight: 25, marginLeft: 27 }}>Log Out</Text>
+                </View>
+              </TouchableOpacity>
+            )
+          }
+        </MyContext.Consumer>
+
       </View>
     )
   }

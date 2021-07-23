@@ -30,17 +30,13 @@ export async function postRequest(url = "", body = {}) {
     return responseJson;
 }
 
-export function isNetworkConnected(){
-    try {
-        // var isConnected = true
-        NetInfo.fetch().then(state => {
-            // console.log("Connection type", state.type);
-            // console.log("Is connected?", state.isConnected);
-            return state.isConnected
-        });
-    } catch (error) {
-        return true
-    }
+export function isNetworkConnected() {
+    NetInfo.fetch().then(state => {
+        console.log('stateS:', state.isConnected)
+        // console.log("Connection type", state.type);
+        // console.log("Is connected?", state.isConnected);
+        return state.isConnected
+    });
 }
 
 export async function putRequest(url = "", Cookie = "", body = {}) {

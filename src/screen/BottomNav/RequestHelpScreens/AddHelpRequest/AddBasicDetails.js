@@ -19,6 +19,8 @@ class AddBasicDetails extends Component {
             newPassword: '',
             confirmNewPassword: '',
             showPassword: false,
+            snackbarVisibility: false,
+            snackbarMsg: '',
             genderList: [
                 { label: 'Male', value: 'male' },
                 { label: 'Female', value: 'female' },
@@ -26,18 +28,26 @@ class AddBasicDetails extends Component {
             ],
             open: false,
             value: null,
+            categoryHelp: ''
         };
     }
+    componentDidMount() {
+        const categoryHelp = this.props.route.params.categoryHelp
+        console.log('categoryHelp:', categoryHelp)
+        this.setState({ categoryHelp: categoryHelp })
+    }
     goToPickImage = async () => {
-        const { description, title } = this.state
+        const { description, title, categoryHelp } = this.state
         if (title.trim() !== '' && description.trim() !== '') {
             this.props.navigation.navigate('Add Image', {
-                title: title,
-                description: description
+                title: title.trim(),
+                description: description.trim(),
+                categoryHelp: categoryHelp
             })
         }
         else {
             console.log('Fill all fields')
+            this.setState({ snackbarVisibility: true, snackbarMsg: 'Fill all fields' })
         }
     }
     render() {
@@ -76,6 +86,20 @@ class AddBasicDetails extends Component {
                         <Icon name="send" color={theme.TEXT_WHITE} size={25} />
                     </TouchableOpacity>
                 </View>
+                <Snackbar
+                    visible={this.state.snackbarVisibility}
+                    style={{ backgroundColor: theme.PRIMARY_DARK, marginBottom: 100, borderRadius: 5 }}
+                    duration={3000}
+                    onDismiss={() => this.setState({ snackbarVisibility: false })}
+                    action={{
+                        label: 'Ok',
+                        color: theme.TEXT_WHITE,
+                        onPress: () => {
+                            this.setState({ snackbarVisibility: false })
+                        },
+                    }}>
+                    <Text style={{ color: theme.TEXT_WHITE, fontSize: 15 }}>{this.state.snackbarMsg}</Text>
+                </Snackbar>
             </View>
         )
     }

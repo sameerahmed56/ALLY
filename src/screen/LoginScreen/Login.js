@@ -22,12 +22,14 @@ class Login extends Component {
       email: 'sameer.1923co1066@kiet.edu',
       showPassword: false,
       password: '123456',
+      snackbarVisibility: false,
+      snackbarMsg: ''
     };
   }
   async componentDidMount() {
     const { email, password } = this.state
-    const token = await getToken()
-    console.log('token:', token)
+    // const token = await getToken()
+    // console.log('token:', token)
     // if (token) {
     //   const device_id = await DeviceInfo.getUniqueID()
     //   const fcmInsertBody = JSON.stringify({
@@ -84,9 +86,11 @@ class Login extends Component {
 
   }
 
-  login = async () => {
+  login = async (login) => {
     const { email, password } = this.state
-    if (isNetworkConnected) {
+    // console.log('isNetworkConnected:', isNetworkConnected())
+    if (true) {
+      console.log('sss')
       if (email.trim() !== '' && password.trim() !== '') {
         try {
           const loginBody = JSON.stringify({
@@ -95,20 +99,27 @@ class Login extends Component {
           })
           let response = await postRequest(urls.LOGIN, loginBody)
           console.log('response:', response)
-          if (response.admin) {
+          if (response.msg === 'login success') {
             await AsyncStorage.setItem(storageKeys.LOGIN_DATA, JSON.stringify(response))
+            await this.setNotification()
+            setTimeout(login, 800)
           }
-          this.setNotification()
+          else {
+            this.setState({ snackbarVisibility: true, snackbarMsg: response.msg })
+          }
         } catch (error) {
           console.log('error:', error)
+          this.setState({ snackbarVisibility: true, snackbarMsg: 'Some error occurred' })
         }
       }
       else {
         console.log('fill all form')
+        this.setState({ snackbarVisibility: true, snackbarMsg: 'Fill all fields' })
       }
     }
     else {
       console.log("no internet")
+      this.setState({ snackbarVisibility: true, snackbarMsg: 'No internet Connection' })
     }
   }
   render() {
@@ -145,30 +156,51 @@ class Login extends Component {
             placeholder='Enter your password'
           />
         </View>
-        <View style={{ marginHorizontal: 15, flexDirection: 'row', justifyContent: 'flex-end', marginTop: 10 }}>
+        {/* <View style={{ marginHorizontal: 15, flexDirection: 'row', justifyContent: 'flex-end', marginTop: 10 }}>
           <TouchableOpacity onPress={() => { this.props.navigation.navigate('Change Password') }}>
             <Text style={{ fontSize: 16, color: theme.TEXT_SECONDARY }}>Forgot Password ?</Text>
           </TouchableOpacity>
-        </View>
-        <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center', marginTop: 60 }} onPress={() => {
-          this.login()
-          // this.props.navigation.navigate('Signup')
-        }}>
-          <GradientButton
-            colorArray={[theme.PRIMARY_LIGHT, theme.PRIMARY_DARK]}
-            paddingHorizontal={25}
-            paddingVertical={10}
-            btnWidth={200}
-            borderRadius={5}
-            MiddleComponent={() => <Text style={{ color: theme.TEXT_WHITE, fontSize: 18 }}>Sign In </Text>}
-          />
-        </TouchableOpacity>
+        </View> */}
+
+        <MyContext.Consumer>
+          {
+            value => (
+              <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center', marginTop: 60 }} onPress={() => {
+                this.login(value)
+                // this.props.navigation.navigate('Signup')
+              }}>
+                <GradientButton
+                  colorArray={[theme.PRIMARY_LIGHT, theme.PRIMARY_DARK]}
+                  paddingHorizontal={25}
+                  paddingVertical={10}
+                  btnWidth={200}
+                  borderRadius={5}
+                  MiddleComponent={() => <Text style={{ color: theme.TEXT_WHITE, fontSize: 18 }}>Sign In </Text>}
+                />
+              </TouchableOpacity>
+            )
+          }
+        </MyContext.Consumer>
         <View style={{ marginHorizontal: 15, flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
           <Text style={{ fontSize: 16 }}>Don't have a account?  </Text>
           <TouchableOpacity onPress={() => { this.props.navigation.navigate('Signup') }}>
             <Text style={{ fontSize: 16, color: theme.TEXT_SECONDARY }}>Sign Up</Text>
           </TouchableOpacity>
         </View>
+        <Snackbar
+          visible={this.state.snackbarVisibility}
+          style={{ backgroundColor: theme.PRIMARY_DARK, marginBottom: 30, borderRadius: 5 }}
+          duration={3000}
+          onDismiss={() => this.setState({ snackbarVisibility: false })}
+          action={{
+            label: 'Ok',
+            color: theme.TEXT_WHITE,
+            onPress: () => {
+              this.setState({ snackbarVisibility: false })
+            },
+          }}>
+          <Text style={{ color: theme.TEXT_WHITE, fontSize: 15 }}>{this.state.snackbarMsg}</Text>
+        </Snackbar>
       </View>
     );
   }

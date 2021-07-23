@@ -12,6 +12,8 @@ class Home extends PureComponent {
 
     this.state = {
       pendingList: [],
+      snackbarVisibility: false,
+      snackbarMsg: ''
     }
   }
   async componentDidMount() {
@@ -24,6 +26,7 @@ class Home extends PureComponent {
       this.setState({ pendingList: response })
     } catch (error) {
       console.log('error:', error)
+      this.setState({ snackbarVisibility: true, snackbarMsg: 'Some error occurred' })
     }
   }
   goToGiveHelp = (item) => {
@@ -34,27 +37,49 @@ class Home extends PureComponent {
   }
   render() {
     const theme = colors
+    const { pendingList } = this.state
     return (
       <View style={{ flex: 1, backgroundColor: theme.TILE }}>
         <Header headerText="Home" showBackBtn={false} />
-        <FlatList
-          data={this.state.pendingList}
-          extraData={this.state.pendingList}
-          initialNumToRender={5}
-          renderItem={({ item, index }) =>
-            <TouchableOpacity onPress={() => this.goToGiveHelp(item)} activeOpacity={0.8}>
-              <Card style={{ backgroundColor: theme.WHITE, paddingVertical: 10, marginVertical: 5, paddingHorizontal: 10, marginHorizontal: 10, width: DeviceWidth - 20 }}>
-                <Text style={{ fontSize: 18, color: theme.TEXT_PRIMARY, letterSpacing: 1 }}>{item.user_name}</Text>
-                <Image
-                  source={{ uri: item.image }}
-                  style={{ height: (DeviceWidth - 40) * (item.image_ht / item.image_width), width: DeviceWidth - 40 }}
-                  resizeMode="contain"
-                />
-                <Text style={{ fontSize: 15, color: theme.TEXT_PRIMARY, }}>{item.request_title}</Text>
-                <Text style={{ fontSize: 14, color: theme.TEXT_SECONDARY, }}>{item.request_description}</Text>
-              </Card>
-            </TouchableOpacity>
-          } />
+        {
+          pendingList.length !== 0 ?
+            <FlatList
+              data={this.state.pendingList}
+              extraData={this.state.pendingList}
+              initialNumToRender={5}
+              renderItem={({ item, index }) =>
+                <TouchableOpacity onPress={() => this.goToGiveHelp(item)} activeOpacity={0.8}>
+                  <Card style={{ backgroundColor: theme.WHITE, paddingVertical: 10, marginVertical: 5, paddingHorizontal: 10, marginHorizontal: 10, width: DeviceWidth - 20 }}>
+                    <Text style={{ fontSize: 18, color: theme.TEXT_PRIMARY, letterSpacing: 1 }}>{item.user_name}</Text>
+                    <Image
+                      source={{ uri: item.image }}
+                      style={{ height: (DeviceWidth - 40) * (item.image_ht / item.image_width), width: DeviceWidth - 40 }}
+                      resizeMode="contain"
+                    />
+                    <Text style={{ fontSize: 15, color: theme.TEXT_PRIMARY, }}>{item.request_title}</Text>
+                    <Text style={{ fontSize: 14, color: theme.TEXT_SECONDARY, }}>{item.request_description}</Text>
+                  </Card>
+                </TouchableOpacity>
+              } />
+            :
+            <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+              <Text style={{ color: theme.TEXT_PRIMARY, fontSize: 16, color: theme.TEXT_SECONDARY }}>Not Any Pending Requests</Text>
+            </View>
+        }
+        <Snackbar
+          visible={this.state.snackbarVisibility}
+          style={{ backgroundColor: theme.PRIMARY_DARK, marginBottom: 30, borderRadius: 5 }}
+          duration={3000}
+          onDismiss={() => this.setState({ snackbarVisibility: false })}
+          action={{
+            label: 'Ok',
+            color: theme.TEXT_WHITE,
+            onPress: () => {
+              this.setState({ snackbarVisibility: false })
+            },
+          }}>
+          <Text style={{ color: theme.TEXT_WHITE, fontSize: 15 }}>{this.state.snackbarMsg}</Text>
+        </Snackbar>
       </View>
     )
   }

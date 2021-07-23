@@ -80,12 +80,13 @@ const DeviceHeight = Dimensions.get('window').height;
 
 export const isLoggedIn = async () => {
   try {
-    let cookie = await AsyncStorage.getItem(storageKeys.COOKIES)
+    let cookie = await AsyncStorage.getItem(storageKeys.LOGIN_DATA)
+    console.log('cookie:', cookie)
     if (cookie == null) {
       // return "LoggedIn"
-      return true
-    } else {
       return false
+    } else {
+      return true
     }
   }
   catch (err) {

@@ -132,8 +132,8 @@ class Admin extends PureComponent {
                                 </Card>
                             } />
                         :
-                        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                            <Text style={{ color: theme.TEXT_PRIMARY, fontSize: 16 }}>Not Any Pending Requests</Text>
+                        <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+                            <Text style={{ color: theme.TEXT_PRIMARY, fontSize: 16, color: theme.TEXT_SECONDARY }}>Not Any Pending Requests</Text>
                         </View>
 
                 }

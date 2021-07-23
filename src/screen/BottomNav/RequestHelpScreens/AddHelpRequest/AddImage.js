@@ -30,13 +30,16 @@ export default class AddImage extends Component {
             base64Image: '',
             file: '',
             height: 0,
-            width: 0
+            width: 0,
+            snackbarVisibility: false,
+            snackbarMsg: '',
+            categoryHelp: ''
         }
     }
     componentDidMount() {
         const params = this.props.route.params
         console.log('params:', params)
-        this.setState({ title: params.title, description: params.description })
+        this.setState({ title: params.title, description: params.description, categoryHelp: params.categoryHelp })
     }
     checkStorageAndCameraPermission = async () => {
         if (Platform.OS === 'android') {
@@ -132,7 +135,7 @@ export default class AddImage extends Component {
         } catch (err) {
             //error uploading image
             console.log(err)
-            this.setState({ snackbarVisibility: true, snackbarMsg: 'Error Uploading File!', attaching: false, })
+            this.setState({ snackbarVisibility: true, snackbarMsg: 'Error Uploading Image!', attaching: false, })
         }
 
     }
@@ -175,15 +178,20 @@ export default class AddImage extends Component {
     }
 
     goToPayment = async () => {
-        const { description, title, selectedImageName, selectedImageType, file, selectedImageUri, height, width } = this.state
-        this.props.navigation.navigate('Add Payment Info', {
-            description: description,
-            title: title,
-            file: file,
-            selectedImageUri: selectedImageUri,
-            height: height,
-            width: width
-        })
+        const { description, title, selectedImageName, selectedImageType, file, selectedImageUri, height, width, categoryHelp } = this.state
+        if (file.trim() === '') {
+            this.props.navigation.navigate('Add Payment Info', {
+                description: description,
+                title: title,
+                file: file,
+                selectedImageUri: selectedImageUri,
+                height: height,
+                width: width,
+                categoryHelp: categoryHelp
+            })
+        } else {
+            this.setState({ snackbarVisibility: true, snackbarMsg: 'Please select any image' })
+        }
     }
     render() {
         const theme = colors
@@ -199,9 +207,9 @@ export default class AddImage extends Component {
                                 uri: selectedImageUri
                             }} />
                             :
-                            <View style={{ width: DeviceWidth - 30, marginHorizontal: 16, borderWidth: 2, borderColor: theme.BORDER, height: DeviceWidth, justifyContent: 'center', alignItems: 'center' }}>
+                            <TouchableOpacity onPress={() => { this.addImage() }} style={{ width: DeviceWidth - 30, marginHorizontal: 16, borderWidth: 2, borderColor: theme.BORDER, height: DeviceWidth, justifyContent: 'center', alignItems: 'center' }}>
                                 <Text style={{ fontSize: 16, alignSelf: 'center', color: theme.TEXT_PRIMARY, letterSpacing: 0.5 }}>Select Any Image</Text>
-                            </View>
+                            </TouchableOpacity>
                     }
                 </ScrollView>
                 <View style={{ position: 'absolute', left: 30, bottom: 30, elevation: 5, backgroundColor: theme.WHITE, height: 56, width: 56, justifyContent: 'center', alignItems: 'center', borderRadius: 30 }}>
@@ -217,6 +225,20 @@ export default class AddImage extends Component {
                         <Icon name="send" color={theme.TEXT_WHITE} size={25} />
                     </TouchableOpacity>
                 </View>
+                <Snackbar
+                    visible={this.state.snackbarVisibility}
+                    style={{ backgroundColor: theme.PRIMARY_DARK, marginBottom: 100, borderRadius: 5 }}
+                    duration={3000}
+                    onDismiss={() => this.setState({ snackbarVisibility: false })}
+                    action={{
+                        label: 'Ok',
+                        color: theme.TEXT_WHITE,
+                        onPress: () => {
+                            this.setState({ snackbarVisibility: false })
+                        },
+                    }}>
+                    <Text style={{ color: theme.TEXT_WHITE, fontSize: 15 }}>{this.state.snackbarMsg}</Text>
+                </Snackbar>
             </View>
         )
     }
