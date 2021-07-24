@@ -138,7 +138,7 @@ class Login extends Component {
             style={styles.textInputStyle}
             value={this.state.email}
             mode='flat'
-            theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
+            theme={{ colors: { primary: theme.PRIMARY, placeholder: theme.TEXT_SECONDARY, text: theme.TEXT_PRIMARY }, multiline: true }}
             label='KIET email'
             onChangeText={(email) => this.setState({ email: email })}
             placeholder='Enter your KIET email'
@@ -149,7 +149,7 @@ class Login extends Component {
             style={styles.textInputStyle}
             value={this.state.password}
             mode='flat'
-            theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
+            theme={{ colors: { primary: theme.PRIMARY, placeholder: theme.TEXT_SECONDARY, text: theme.TEXT_PRIMARY }, multiline: true }}
             label='Password'
             secureTextEntry={!this.state.showPassword}
             onChangeText={(password) => this.setState({ password: password })}
@@ -214,7 +214,8 @@ const styles = StyleSheet.create({
   textInputStyle: {
     backgroundColor: colors.WHITE,
     paddingHorizontal: 10,
-    fontSize: 15
+    fontSize: 15,
+    color: colors.TEXT_PRIMARY
   },
   textInputContainer: {
     borderWidth: 1,

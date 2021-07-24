@@ -232,30 +232,29 @@ class Account extends PureComponent {
         email: email
       })
       console.log('fcmInsertBody:', fcmInsertBody)
-      try {
+      setTimeout(logout, 800)
+      // try {
+      //   let response = await postRequest(urls.FCM_DELETE, fcmInsertBody)
+      //   console.log('response:', response)
+      //   if (response.msg === 'fcm deleted successfully') {
+      //     const logoutResponse = await getRequest(urls.LOGOUT)
+      //     console.log('logoutResponse:', logoutResponse)
+      //     if (logoutResponse.msg === 'logout success') {
+      //       // let keys = await AsyncStorage.getAllKeys()
+      //       // await AsyncStorage.multiRemove(keys)
+      //     }
+      //     else {
+      //       console.log('logout not done')
+      //     }
+      //   }
+      //   else {
+      //     console.log('logout not done')
+      //   }
 
-        let response = await postRequest(urls.FCM_DELETE, fcmInsertBody)
-        console.log('response:', response)
-        if (response.msg === 'fcm deleted successfully') {
-          const logoutResponse = await getRequest(urls.LOGOUT)
-          console.log('logoutResponse:', logoutResponse)
-          if (logoutResponse.msg === 'logout success') {
-            let keys = await AsyncStorage.getAllKeys()
-            await AsyncStorage.multiRemove(keys)
-            setTimeout(logout, 800)
-          }
-          else {
-            console.log('logout not done')
-          }
-        }
-        else {
-          console.log('logout not done')
-        }
-
-      } catch (e) {
-        console.log('e:', e)
-        //failed to set fcm
-      }
+      // } catch (e) {
+      //   console.log('e:', e)
+      //   //failed to set fcm
+      // }
     }
   }
   render() {
@@ -280,7 +279,7 @@ class Account extends PureComponent {
         </View>
         <TouchableOpacity onPress={() => { this.setState({ selectedTab: 'Notification' }), this.props.navigation.navigate('Notification Screen') }}>
           <View style={{ marginHorizontal: 20, paddingHorizontal: 20, marginVertical: 3, paddingVertical: 18, flexDirection: 'row', borderRadius: 15, backgroundColor: selectedTab === 'Notification' ? theme.PRIMARY_DARK : theme.BACKGROUND, alignItems: 'center' }}>
-            <IconWithBadge name="bell" size={27} color={selectedTab === 'Notification' ? theme.WHITE : theme.PRIMARY_DARK} badgeCount={badgeCount.count} />
+            <IconWithBadge name="bell" size={27} color={selectedTab === 'Notification' ? theme.WHITE : theme.TEXT_PRIMARY} badgeCount={badgeCount.count} />
             <Text style={{ color: selectedTab === 'Notification' ? theme.TEXT_WHITE : theme.TEXT_PRIMARY, fontSize: 16, letterSpacing: 0.36, lineHeight: 25, marginLeft: 27 }}>Notification</Text>
           </View>
         </TouchableOpacity>

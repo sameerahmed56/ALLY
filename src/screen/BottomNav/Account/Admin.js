@@ -31,9 +31,10 @@ class Admin extends PureComponent {
             let showActionButton = []
             let requestRemarkList = []
             let actionText = []
-            this.state.pendingList.forEach((element, index) => {
+            response.forEach((element, index) => {
                 actionText[index] = ''
                 requestRemarkList[index] = ''
+
                 showActionButton[index] = true
             });
             console.log('actionText:', actionText)
@@ -52,9 +53,9 @@ class Admin extends PureComponent {
         console.log('requestRemarkList:', requestRemarkList)
     }
     approveRejectRequest = async (item, index, status) => {
-        const { requestRemarkList, actionText } = this.state
+        const { requestRemarkList, actionText, showActionButton } = this.state
         actionText[index] = status
-
+        showActionButton[index] = false
         try {
             let approveRejectBody = JSON.stringify({
                 id: item.request_id,
@@ -64,7 +65,7 @@ class Admin extends PureComponent {
             console.log('approveRejectBody:', approveRejectBody)
             const response = await postRequest(urls.APPROVE_REJECT_REQUEST, approveRejectBody)
             console.log('response:', response)
-            this.setState({ actionText })
+            this.setState({ actionText, showActionButton })
         } catch (error) {
             console.log('error:', error)
         }
@@ -102,17 +103,17 @@ class Admin extends PureComponent {
                                     {
                                         this.state.showActionButton[index] === true ?
                                             <View>
-                                                <View style={{ marginHorizontal: 0 }}>
+                                                {/* <View style={{ marginHorizontal: 0 }}>
                                                     <TextInput
                                                         style={{ backgroundColor: theme.WHITE, borderRadius: 5, paddingHorizontal: 5, fontSize: 15, }}
                                                         value={this.state.requestRemarkList[index]}
                                                         mode='flat'
-                                                        theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
+                                                        theme={{ colors: { primary: theme.PRIMARY, placeholder: theme.TEXT_SECONDARY, text: theme.TEXT_PRIMARY }, multiline: true }}
                                                         label='Remark'
                                                         onChangeText={(text) => this.remarkTxtChange(text, index)}
                                                         placeholder='Write Your Remark'
                                                         multiline />
-                                                </View>
+                                                </View> */}
                                                 <View style={{ flexDirection: 'row', flex: 1 }}>
                                                     <TouchableOpacity onPress={() => { this.approveRejectRequest(item, index, 'APPROVED') }} style={{ ...styles.requestBtn }}>
                                                         <Icon name={'check'} color={theme.ATT_GREEN} size={25} />

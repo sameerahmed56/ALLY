@@ -61,26 +61,37 @@ class AddPaymentInfo extends Component {
         }
     }
     gotToSubmitRequest = async () => {
-        const { title, description, selectedImageUri, file, gpay, isIfscValid, phonePe, amazonPay, paytm, upi, accountNo, accountHolderName, ifsc, phoneNo, height, width } = this.state
+        const { title, description, selectedImageUri, file, gpay, isIfscValid, phonePe, amazonPay, paytm, upi, accountNo, accountHolderName, categoryHelp, ifsc, phoneNo, height, width } = this.state
         if (isIfscValid) {
             if (accountNo.trim() !== '' && accountHolderName.trim() !== '' && ifsc.trim() !== '' && upi.trim() !== '') {
-                this.props.navigation.navigate('Submit Request', {
-                    description: description,
-                    title: title,
-                    gpay: gpay,
-                    phonePe: phonePe,
-                    amazonPay: amazonPay,
-                    paytm: paytm,
-                    upi: upi,
-                    accountNo: accountNo,
-                    accountHolderName: accountHolderName,
+                const submitBody = JSON.stringify({
+                    amazon_pay: amazonPay,
+                    upi_id: upi,
+                    acc_no: accountNo,
+                    acc_holder_name: accountHolderName,
                     ifsc: ifsc,
-                    phoneNo: phoneNo,
+                    category_help: categoryHelp,
+                    phone: phoneNo,
+                    gpay: gpay,
+                    paytm: paytm,
+                    phone_pay: phonePe,
                     file: file,
+                    title: title,
+                    description: description,
                     height: height,
-                    width: width,
-                    categoryHelp: categoryHelp
+                    width: width
                 })
+                console.log('submitBody:', submitBody)
+                try {
+                    const response = await postRequest(urls.REQUEST_HELP, submitBody)
+                    console.log('response:', response)
+                    this.setState({ snackbarVisibility: true, snackbarMsg: response.msg })
+                    setTimeout(() => {
+                        this.props.navigation.navigate('Home')
+                    }, 3000);
+                } catch (error) {
+                    console.log('error:', error)
+                }
             }
             else {
                 this.setState({ snackbarVisibility: true, snackbarMsg: 'Fill all mandatory fields correctly' })
@@ -102,7 +113,7 @@ class AddPaymentInfo extends Component {
                             style={styles.textInputStyle}
                             value={this.state.accountNo}
                             mode='flat'
-                            theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
+                            theme={{ colors: { primary: theme.PRIMARY, placeholder: theme.TEXT_SECONDARY, text: theme.TEXT_PRIMARY }, multiline: true }}
                             label='Account Number *'
                             onChangeText={(accountNo) => this.setState({ accountNo: accountNo })}
                             placeholder='Enter Account Number(required)'
@@ -114,7 +125,7 @@ class AddPaymentInfo extends Component {
                             style={styles.textInputStyle}
                             value={this.state.accountHolderName}
                             mode='flat'
-                            theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
+                            theme={{ colors: { primary: theme.PRIMARY, placeholder: theme.TEXT_SECONDARY, text: theme.TEXT_PRIMARY }, multiline: true }}
                             label='Account Holder Name *'
                             onChangeText={(accountHolderName) => this.setState({ accountHolderName: accountHolderName })}
                             placeholder='Enter Account Holder Name(required)'
@@ -127,7 +138,7 @@ class AddPaymentInfo extends Component {
                             value={this.state.ifsc}
                             onChangeText={() => { this.setState({ isIfscValid: false }) }}
                             mode='flat'
-                            theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
+                            theme={{ colors: { primary: theme.PRIMARY, placeholder: theme.TEXT_SECONDARY, text: theme.TEXT_PRIMARY }, multiline: true }}
                             label='IFSC *'
                             onChangeText={(ifsc) => this.setState({ ifsc: ifsc })}
                             placeholder='Enter IFSC(required)'
@@ -146,7 +157,7 @@ class AddPaymentInfo extends Component {
                             style={{ ...styles.textInputStyle, flex: 1 }}
                             value={this.state.upi}
                             mode='flat'
-                            theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
+                            theme={{ colors: { primary: theme.PRIMARY, placeholder: theme.TEXT_SECONDARY, text: theme.TEXT_PRIMARY }, multiline: true }}
                             label='UPI Id *'
                             onChangeText={(upi) => this.setState({ upi: upi })}
                             placeholder='Enter UPI Id(required)'
@@ -162,7 +173,7 @@ class AddPaymentInfo extends Component {
                             style={{ ...styles.textInputStyle, flex: 1 }}
                             value={this.state.gpay}
                             mode='flat'
-                            theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
+                            theme={{ colors: { primary: theme.PRIMARY, placeholder: theme.TEXT_SECONDARY, text: theme.TEXT_PRIMARY }, multiline: true }}
                             label='Google Pay'
                             onChangeText={(gpay) => this.setState({ gpay: gpay })}
                             placeholder='Enter G-Pay Number'
@@ -179,7 +190,7 @@ class AddPaymentInfo extends Component {
                             style={{ ...styles.textInputStyle, flex: 1 }}
                             value={this.state.phonePe}
                             mode='flat'
-                            theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
+                            theme={{ colors: { primary: theme.PRIMARY, placeholder: theme.TEXT_SECONDARY, text: theme.TEXT_PRIMARY }, multiline: true }}
                             label='Phone Pe'
                             onChangeText={(phonePe) => this.setState({ phonePe: phonePe })}
                             placeholder='Enter PhonePe Number'
@@ -196,7 +207,7 @@ class AddPaymentInfo extends Component {
                             style={{ ...styles.textInputStyle, flex: 1 }}
                             value={this.state.amazonPay}
                             mode='flat'
-                            theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
+                            theme={{ colors: { primary: theme.PRIMARY, placeholder: theme.TEXT_SECONDARY, text: theme.TEXT_PRIMARY }, multiline: true }}
                             label='Amazon pay'
                             onChangeText={(amazonPay) => this.setState({ amazonPay: amazonPay })}
                             placeholder='Enter Amazon Pay Number'
@@ -213,7 +224,7 @@ class AddPaymentInfo extends Component {
                             style={{ ...styles.textInputStyle, flex: 1 }}
                             value={this.state.paytm}
                             mode='flat'
-                            theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
+                            theme={{ colors: { primary: theme.PRIMARY, placeholder: theme.TEXT_SECONDARY, text: theme.TEXT_PRIMARY }, multiline: true }}
                             label='Paytm'
                             onChangeText={(paytm) => this.setState({ paytm: paytm })}
                             placeholder='Enter Paytm Number'
@@ -225,7 +236,7 @@ class AddPaymentInfo extends Component {
                             style={styles.textInputStyle}
                             value={this.state.phoneNo}
                             mode='flat'
-                            theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
+                            theme={{ colors: { primary: theme.PRIMARY, placeholder: theme.TEXT_SECONDARY, text: theme.TEXT_PRIMARY }, multiline: true }}
                             label='Mobile Number *'
                             onChangeText={(phoneNo) => this.setState({ phoneNo: phoneNo })}
                             placeholder='Enter Mobile Number(required)'
@@ -238,8 +249,8 @@ class AddPaymentInfo extends Component {
                 </ScrollView>
                 <Snackbar
                     visible={this.state.snackbarVisibility}
-                    style={{ backgroundColor: theme.PRIMARY_DARK, marginBottom: 30, borderRadius: 5 }}
-                    duration={3000}
+                    style={{ backgroundColor: theme.PRIMARY_DARK, marginBottom: 60, borderRadius: 5 }}
+                    duration={2000}
                     onDismiss={() => this.setState({ snackbarVisibility: false })}
                     action={{
                         label: 'Ok',

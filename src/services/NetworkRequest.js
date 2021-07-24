@@ -13,6 +13,7 @@ export async function getRequest(url = "") {
         method: 'GET',
         // headers: myHeaders
     });
+    console.log('responseGET:', response)
     let responseJson = await response.json();
     return responseJson;
 }
@@ -47,6 +48,7 @@ export async function putRequest(url = "", Cookie = "", body = {}) {
             Cookie: Cookie
         }
     });
+    console.log('responsePOST:', response)
     let responseJson = await response.json();
     return responseJson;
 }

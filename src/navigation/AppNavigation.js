@@ -49,8 +49,8 @@ export default class AppNavigation extends React.Component {
   }
 
   logout = async () => {
-    let keys = await AsyncStorage.getAllKeys
-    await AsyncStorage.multiRemove(keys);
+    // let keys = await AsyncStorage.getAllKeys
+    // await AsyncStorage.multiRemove(keys);
     this.setState({ LoggedIn: false });
   };
 

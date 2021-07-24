@@ -32,8 +32,8 @@ class Helps extends PureComponent {
   setData = async () => {
     try {
       const response = await getRequest(urls.MY_REQUESTS)
-      const categoryResponse = await getRequest(urls.REQUEST_CATEGORY)
-      console.log(categoryResponse)
+      // const categoryResponse = await getRequest(urls.REQUEST_CATEGORY)
+      // console.log(categoryResponse)
       console.log('response:', response)
       this.setState({ pendingList: response })
     } catch (error) {

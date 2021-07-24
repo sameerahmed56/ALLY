@@ -103,7 +103,7 @@ class Signup extends Component {
             style={styles.textInputStyle}
             value={this.state.fullName}
             mode='flat'
-            theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
+            theme={{ colors: { primary: theme.PRIMARY, placeholder: theme.TEXT_SECONDARY, text: theme.TEXT_PRIMARY }, multiline: true }}
             label='Full Name'
             onChangeText={(fullName) => this.setState({ fullName: fullName })}
             placeholder='Enter Full Name'
@@ -127,7 +127,7 @@ class Signup extends Component {
             style={styles.textInputStyle}
             value={this.state.email}
             mode='flat'
-            theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
+            theme={{ colors: { primary: theme.PRIMARY, placeholder: theme.TEXT_SECONDARY, text: theme.TEXT_PRIMARY }, multiline: true }}
             label='KIET email'
             onChangeText={(email) => this.setState({ email: email })}
             placeholder='Enter your KIET email'
@@ -138,10 +138,11 @@ class Signup extends Component {
             style={styles.textInputStyle}
             value={this.state.password}
             mode='flat'
-            theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
+            theme={{ colors: { primary: theme.PRIMARY, placeholder: theme.TEXT_SECONDARY, text: theme.TEXT_PRIMARY }, multiline: true }}
             label='Password'
             onChangeText={(password) => this.setState({ password: password })}
             placeholder='Enter your password'
+            secureTextEntry
           />
         </View>
         <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center', marginTop: 40, }} onPress={() => {

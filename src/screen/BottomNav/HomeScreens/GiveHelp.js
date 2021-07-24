@@ -26,7 +26,9 @@ class GiveHelp extends PureComponent {
         <ScrollView style={{ paddingVertical: 10, paddingHorizontal: 20, backgroundColor: theme.WHITE }} >
           <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.TEXT_PRIMARY }}>{requestData.request_title}</Text>
           <Image
-            source={{ uri: requestData.image }}
+            // source={{ uri: requestData.image }}
+            source={require('../../../assets/help.jpeg')}
+
             style={{ height: (DeviceWidth - 40), width: DeviceWidth - 40, }}
             resizeMode="contain"
           />

@@ -52,8 +52,9 @@ class Home extends PureComponent {
                   <Card style={{ backgroundColor: theme.WHITE, paddingVertical: 10, marginVertical: 5, paddingHorizontal: 10, marginHorizontal: 10, width: DeviceWidth - 20 }}>
                     <Text style={{ fontSize: 18, color: theme.TEXT_PRIMARY, letterSpacing: 1 }}>{item.user_name}</Text>
                     <Image
-                      source={{ uri: item.image }}
-                      style={{ height: (DeviceWidth - 40) * (item.image_ht / item.image_width), width: DeviceWidth - 40 }}
+                      // source={{ uri: item.image }}
+                      source={require('../../../assets/help.jpeg')}
+                      style={{ height: (DeviceWidth - 40), width: DeviceWidth - 40 }}
                       resizeMode="contain"
                     />
                     <Text style={{ fontSize: 15, color: theme.TEXT_PRIMARY, }}>{item.request_title}</Text>

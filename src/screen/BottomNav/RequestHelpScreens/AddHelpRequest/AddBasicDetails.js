@@ -62,7 +62,7 @@ class AddBasicDetails extends Component {
                             value={this.state.title}
                             mode='flat'
                             multiline
-                            theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
+                            theme={{ colors: { primary: theme.PRIMARY, placeholder: theme.TEXT_SECONDARY, text: theme.TEXT_PRIMARY }, multiline: true }}
                             label='Title'
                             onChangeText={(title) => this.setState({ title: title })}
                             placeholder='Enter Title for your help'
@@ -73,7 +73,7 @@ class AddBasicDetails extends Component {
                             style={styles.textInputStyle}
                             value={this.state.description}
                             multiline
-                            theme={{ colors: { primary: theme.PRIMARY }, multiline: true }}
+                            theme={{ colors: { primary: theme.PRIMARY, placeholder: theme.TEXT_SECONDARY, text: theme.TEXT_PRIMARY }, multiline: true }}
                             mode='flat'
                             label='Description'
                             onChangeText={(description) => this.setState({ description: description })}
